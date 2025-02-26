@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Wallpaper Changer
+Exec=python /usr/local/bin/wallpaper-changer.py
+Icon=/usr/share/wallpaper-changer/icon.png
+Type=Application
+Categories=Graphics;Utility;

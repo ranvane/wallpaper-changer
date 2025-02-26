@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Wallpaper Changer
+Exec={PYTHON_EXECUTABLE} {SCRIPT_PATH}
+Icon={ICON_PATH}
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true

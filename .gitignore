@@ -169,3 +169,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+.gitignore
+*.deb
+*.zip
+*.xrc
+*.bak
+*.tmp
+*.ico

@@ -18,7 +18,7 @@ mkdir -p ${FULL_PACKAGE_NAME}/usr/share/${PACKAGE_NAME}
 
 # 复制文件到相应目录
 cp main_app.py ${FULL_PACKAGE_NAME}/usr/local/bin/wallpaper-changer.py
-cp Bing_Wallpaper_changer_UI.py ${FULL_PACKAGE_NAME}/usr/local/bin/Bing_Wallpaper_changer_UI.py
+cp Wallpaper_changer_UI.py ${FULL_PACKAGE_NAME}/usr/local/bin/Wallpaper_changer_UI.py
 cp icon.png ${FULL_PACKAGE_NAME}/usr/share/${PACKAGE_NAME}/
 cp -r resources ${FULL_PACKAGE_NAME}/usr/share/${PACKAGE_NAME}/
 

@@ -177,4 +177,5 @@ cython_debug/
 *.tmp
 *.ico
 wallpaper-changer*/
-wallpaper-changer_1.0-1
+wallpaper-changer_1.0-1/
+.vscode/

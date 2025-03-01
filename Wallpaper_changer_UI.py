@@ -84,8 +84,11 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_checkBox_autoStart = wx.CheckBox( self, wx.ID_ANY, _(u"开机启动"), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
         bSizer6.Add( self.m_checkBox_autoStart, 1, wx.ALL, 5 )
 
+        self.m_checkBox_startHideWin = wx.CheckBox( self, wx.ID_ANY, _(u"开机时隐藏窗口"), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
+        bSizer6.Add( self.m_checkBox_startHideWin, 1, wx.ALL, 5 )
+
         self.m_button_exit = wx.Button( self, wx.ID_ANY, _(u"退出程序"), wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer6.Add( self.m_button_exit, 1, wx.ALL, 5 )
+        bSizer6.Add( self.m_button_exit, 2, wx.ALL, 5 )
 
 
         bSizer1.Add( bSizer6, 1, wx.EXPAND, 5 )
@@ -110,6 +113,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_button_prev.Bind( wx.EVT_BUTTON, self.on_prev )
         self.m_button_next.Bind( wx.EVT_BUTTON, self.on_next )
         self.m_checkBox_autoStart.Bind( wx.EVT_CHECKBOX, self.on_auto_start_changed )
+        self.m_checkBox_startHideWin.Bind( wx.EVT_CHECKBOX, self.on_startHideWin_changed )
         self.m_button_exit.Bind( wx.EVT_BUTTON, self.on_exit )
 
     def __del__( self ):
@@ -133,6 +137,9 @@ class Main_Ui_Frame ( wx.Frame ):
         event.Skip()
 
     def on_auto_start_changed( self, event ):
+        event.Skip()
+
+    def on_startHideWin_changed( self, event ):
         event.Skip()
 
     def on_exit( self, event ):

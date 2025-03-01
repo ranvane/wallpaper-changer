@@ -20,9 +20,25 @@ IS_PRODUCTION = os.path.dirname(os.path.abspath(
 if IS_PRODUCTION:
     # 生产环境：使用 /usr/share/wallpaper-changer
     RESOURCE_PATH = "/usr/share/wallpaper-changer"
+    
+    logger.remove()  # 移除默认的处理器
+    logger.add(
+        sink=sys.stdout,  # 输出到标准输出
+        format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+        colorize=True,  # 启用颜色输出
+        level="DEBUG"  # 设置最低日志级别
+    )
+
 else:
     # 开发环境：使用当前文件所在目录
     RESOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
+    logger.remove()  # 移除默认的处理器
+    logger.add(
+        sink=sys.stdout,  # 输出到标准输出
+        format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+        colorize=True,  # 启用颜色输出
+        level="INFO"  # 设置最低日志级别
+    )
 
 # 确保资源路径存在
 if not os.path.exists(RESOURCE_PATH):
@@ -54,7 +70,7 @@ class WallpaperChangerTaskBarIcon(TaskBarIcon):
 
     def load_icon(self):
         icon_path = os.path.join(RESOURCE_PATH, "icon.png")
-        logger.info(f"尝试加载图标: {icon_path} 是否存在：{os.path.exists(icon_path)}")
+        logger.debug(f"尝试加载图标: {icon_path} 是否存在：{os.path.exists(icon_path)}")
 
         if not os.path.exists(icon_path):
             logger.error(f"图标文件不存在: {icon_path}")
@@ -67,12 +83,12 @@ class WallpaperChangerTaskBarIcon(TaskBarIcon):
                 return
 
             if self.SetIcon(self.icon, "壁纸更换器"):
-                logger.info("成功设置托盘图标")
+                logger.debug("成功设置托盘图标")
 
             else:
                 logger.error("设置托盘图标失败")
-            logger.info(f"Icon successfully set: {self.icon.IsOk()}")
-            logger.info(f"Icon set to taskbar: {self.IsAvailable()}")
+            logger.debug(f"Icon successfully set: {self.icon.IsOk()}")
+            logger.debug(f"Icon set to taskbar: {self.IsAvailable()}")
         except Exception as e:
             logger.exception(f"加载托盘图标时发生异常: {e}")
 
@@ -85,7 +101,7 @@ class WallpaperChangerTaskBarIcon(TaskBarIcon):
         Args:
             event: 鼠标事件对象（在此方法中未被使用）
         """
-        logger.info("托盘图标被点击")
+        logger.debug("托盘图标被点击")
 
         if self.frame:
             self.frame.Show()
@@ -162,7 +178,7 @@ class WallpaperChangerTaskBarIcon(TaskBarIcon):
             self.RemoveIcon()
             if self.icon:
                 del self.icon
-            logger.info("托盘图标已成功销毁")
+            logger.debug("托盘图标已成功销毁")
         except Exception as e:
             logger.error(f"销毁托盘图标时出错: {e}")
         finally:
@@ -208,13 +224,25 @@ class Main_Frame(Main_Ui_Frame):
             try:
                 taskbar_icon = WallpaperChangerTaskBarIcon(self)
 
-                logger.info("托盘图标初始化完成")
+                logger.debug("托盘图标初始化完成")
             except Exception as e:
                 logger.exception(f"创建托盘图标时发生异常: {e}")
 
-
         except Exception as e:
             logger.error(f"初始化时出错: {e}")
+
+    def hide_window(self):
+        """
+        隐藏主窗口到系统托盘的方法。
+        使用wx.CallAfter确保在主事件循环中执行隐藏操作。
+        """
+
+        def do_hide():
+            self.Hide()
+            if hasattr(self, 'taskbar_icon'):
+                self.taskbar_icon.show_balloon("壁纸更换器", "程序已最小化到系统托盘")
+
+        wx.CallAfter(do_hide)
 
     def load_config(self):
         """
@@ -223,7 +251,7 @@ class Main_Frame(Main_Ui_Frame):
         此方法尝试从配置文件中读取设置，并将其应用到UI控件上。
         如果配置文件存在，它会加载目录路径和时间间隔设置。
         """
-        logger.info("Loading configuration...")
+        logger.debug("Loading configuration...")
 
         if os.path.exists(self.config_file):
             # 如果配置文件存在，则打开并读取内容
@@ -233,6 +261,12 @@ class Main_Frame(Main_Ui_Frame):
                 self.m_dirPicker.SetPath(config.get('directory', ''))
                 # 设置时间间隔控件的值
                 self.m_spinCtrl_interval.SetValue(config.get('interval', 60))
+                # 显示壁纸目录路径
+                self.m_staticText_dirpath.SetLabel(
+                    f"壁纸目录: {self.m_dirPicker.GetPath()}")
+                # 选择是否开机启动隐藏窗口
+                self.m_checkBox_startHideWin.SetValue(
+                    config.get('hidewindown', True))
 
     def save_config(self):
         """
@@ -240,12 +274,13 @@ class Main_Frame(Main_Ui_Frame):
 
         此方法将当前的设置（包括壁纸目录和更换间隔）保存到配置文件中。
         """
-        logger.info("Save configuration...")
+        logger.debug("Save configuration...")
 
         # 创建包含当前设置的配置字典
         config = {
             'directory': self.m_dirPicker.GetPath(),
-            'interval': self.m_spinCtrl_interval.GetValue()
+            'interval': self.m_spinCtrl_interval.GetValue(),
+            'hidewindown': self.m_checkBox_startHideWin.GetValue()
         }
 
         # 确保配置目录存在
@@ -256,7 +291,7 @@ class Main_Frame(Main_Ui_Frame):
             # 尝试将配置写入文件
             with open(self.config_file, 'w') as f:
                 json.dump(config, f)
-            logger.info(f"配置已保存到 {self.config_file}")
+            logger.debug(f"配置已保存到 {self.config_file}")
             self.m_staticText_status.SetLabel(f"配置已保存！")
         except Exception as e:
             # 如果保存过程中出现错误，记录错误并更新状态文本
@@ -266,21 +301,21 @@ class Main_Frame(Main_Ui_Frame):
     def check_autostart(self):
 
         if self.desktop_file.exists():
-            logger.info("检测到开机自启动设置")
+            logger.debug("检测到开机自启动设置")
             self.m_checkBox_autoStart.SetValue(True)
+
+            # 开机启动开始更换壁纸
             self._start()
+            # 隐藏窗口而不是关闭
+            if self.m_checkBox_startHideWin.GetValue():
+                self.hide_window()
 
         else:
-            logger.info("未检测到开机自启动设置")
+            logger.debug("未检测到开机自启动设置")
             self.m_checkBox_autoStart.SetValue(False)
-            # 更新按钮状态
-            # self.m_button_start.Enable()  # 启用开始按钮
-            # self.m_button_stop.Disable()  # 禁用停止按钮
-            # self.m_button_prev.Disable()  # 禁用上一张按钮
-            # self.m_button_next.Disable()  # 禁用下一张按钮
 
     def on_m_dirPicker_changed(self, event):
-        logger.info("Directory changed")
+        logger.debug("Directory changed")
         self.m_staticText_dirpath.SetLabel(
             f"壁纸目录: {self.m_dirPicker.GetPath()}")
         self.save_config()
@@ -295,7 +330,7 @@ class Main_Frame(Main_Ui_Frame):
         Args:
             event: 触发退出的事件对象（未使用）
         """
-        logger.info("开始执行退出操作")
+        logger.debug("开始执行退出操作")
 
         # 停止壁纸更换进程
         self.on_stop(None)
@@ -305,25 +340,33 @@ class Main_Frame(Main_Ui_Frame):
 
         # 销毁系统托盘图标
         if hasattr(self, 'taskbar_icon') and self.taskbar_icon:
-            logger.info("正在销毁系统托盘图标")
+            logger.debug("正在销毁系统托盘图标")
             wx.CallAfter(self.taskbar_icon.Destroy)
 
         # 销毁主窗口
-        logger.info("正在销毁主窗口")
+        logger.debug("正在销毁主窗口")
         self.Destroy()
 
         # 使用 wx.CallAfter 确保在主事件循环中退出应用
-        logger.info("准备退出应用程序")
+        logger.debug("准备退出应用程序")
         wx.CallAfter(wx.GetApp().ExitMainLoop)
 
     def on_close(self, event):
-        # 隐藏窗口而不是关闭
+        """
+        处理窗口关闭事件的方法。
+        
+        当用户尝试关闭窗口时，此方法会被调用。
+        它会隐藏窗口而不是真正关闭程序，使程序继续在后台运行。
+
+        Args:
+            event (wx.CloseEvent): 关闭窗口的事件对象
+        """
         self.Hide()
         event.Veto()  # 阻止默认的关闭行为
 
     def on_start(self, event):
         self._start()
-        logger.info("启动更换壁纸")
+        logger.debug("启动更换壁纸")
 
     def _start(self):
         """
@@ -393,7 +436,7 @@ class Main_Frame(Main_Ui_Frame):
         if not hasattr(self, 'running') or not self.running:
             return  # 如果已经停止，直接返回
 
-        logger.info("正在停止壁纸更换...")
+        logger.debug("正在停止壁纸更换...")
         self.running = False
 
         if hasattr(self, 'thread') and self.thread and self.thread.is_alive():
@@ -421,7 +464,7 @@ class Main_Frame(Main_Ui_Frame):
         """
         清理资源和重置状态的方法。
         """
-        logger.info("正在清理资源...")
+        logger.debug("正在清理资源...")
         self.running = False
         if hasattr(self, 'thread'):
             del self.thread
@@ -431,7 +474,7 @@ class Main_Frame(Main_Ui_Frame):
         wx.CallAfter(self.m_button_prev.Disable)
         wx.CallAfter(self.m_button_next.Disable)
         wx.CallAfter(self.m_staticText_status.SetLabel, "已停止更换壁纸")
-        logger.info("资源清理完成")
+        logger.debug("资源清理完成")
 
     def on_prev(self, event):
         """
@@ -487,7 +530,7 @@ class Main_Frame(Main_Ui_Frame):
         """
 
         if self.m_checkBox_autoStart.IsChecked():
-            logger.info("用户选择了开机自动启动")
+            logger.debug("用户选择了开机自动启动")
             try:
                 # 确保 autostart 目录存在
                 self.autostart_dir.mkdir(parents=True, exist_ok=True)
@@ -518,7 +561,7 @@ class Main_Frame(Main_Ui_Frame):
                 with open(self.desktop_file, 'w') as f:
                     f.write(content)
 
-                logger.info(f"已创建开机自启动文件: {self.desktop_file}")
+                logger.debug(f"已创建开机自启动文件: {self.desktop_file}")
                 # wx.MessageBox("已设置开机自动启动", "成功", wx.OK | wx.ICON_INFORMATION)
                 self.m_staticText_status.SetLabel(f"已创建开机自启动!")
             except Exception as e:
@@ -526,16 +569,16 @@ class Main_Frame(Main_Ui_Frame):
                 # wx.MessageBox(f"设置开机自启动失败: {e}", "错误", wx.OK | wx.ICON_ERROR)
                 self.m_staticText_status.SetLabel(f"设置开机自启动失败!")
         else:
-            logger.info("用户取消了开机自动启动")
+            logger.debug("用户取消了开机自动启动")
             try:
                 # 如果文件存在，则删除它
                 if self.desktop_file.exists():
                     self.desktop_file.unlink()
-                    logger.info(f"已删除开机自启动文件: {self.desktop_file}")
+                    logger.debug(f"已删除开机自启动文件: {self.desktop_file}")
                     # wx.MessageBox("已取消开机自动启动", "成功", wx.OK | wx.ICON_INFORMATION)
                     self.m_staticText_status.SetLabel(f"已取消开机自动启动!")
                 else:
-                    logger.info("开机自启动文件不存在，无需删除")
+                    logger.debug("开机自启动文件不存在，无需删除")
             except Exception as e:
                 logger.error(f"取消开机自启动失败: {e}")
                 # wx.MessageBox(f"取消开机自启动失败: {e}", "错误", wx.OK | wx.ICON_ERROR)
@@ -600,7 +643,7 @@ class Main_Frame(Main_Ui_Frame):
             # 在主线程中更新 UI，显示当前壁纸信息
             wx.CallAfter(self.update_current_wallpaper, wallpaper)
 
-            logger.info(f"成功设置壁纸: {wallpaper}")
+            logger.debug(f"成功设置壁纸: {wallpaper}")
 
         except FileNotFoundError as e:
             logger.error(f"文件错误: {e}")

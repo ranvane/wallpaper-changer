@@ -56,16 +56,68 @@ EOL
 chmod +x ${FULL_PACKAGE_NAME}/DEBIAN/postinst
 
 # 创建 prerm 脚本（卸载前执行）：
-cat > ${FULL_PACKAGE_NAME}/DEBIAN/prerm << EOL
-#!/bin/sh
-update-desktop-database
-EOL
-chmod +x ${FULL_PACKAGE_NAME}/DEBIAN/prerm
+# cat > ${FULL_PACKAGE_NAME}/DEBIAN/prerm << EOL
+# #!/bin/sh
+# update-desktop-database
+# EOL
+# chmod +x ${FULL_PACKAGE_NAME}/DEBIAN/prerm
 
 # 创建 postrm 脚本（卸载后执行）：
 cat > ${FULL_PACKAGE_NAME}/DEBIAN/postrm << EOL
 #!/bin/sh
+set -e
+
+remove_user_files() {
+    user="\$1"
+    home_dir=\$(getent passwd "\$user" | cut -d: -f6)
+    
+    if [ -d "\$home_dir" ]; then
+        # 删除配置目录
+        config_dir="\$home_dir/.config/${PACKAGE_NAME}"
+        if [ -d "\$config_dir" ]; then
+            rm -rf "\$config_dir"
+            echo "Removed config directory: \$config_dir"
+        fi
+
+        # 删除自启动文件
+        autostart_file="\$home_dir/.config/autostart/${PACKAGE_NAME}.desktop"
+        if [ -f "\$autostart_file" ]; then
+            rm -f "\$autostart_file"
+            echo "Removed autostart file: \$autostart_file"
+        fi
+    fi
+}
+
+case "\$1" in
+    purge|remove|abort-install|abort-upgrade|disappear)
+        # 对所有用户执行清理操作
+        for user in \$(getent passwd | cut -d: -f1); do
+            if [ "\$user" != "root" ] && [ -d "/home/\$user" ]; then
+                remove_user_files "\$user"
+            fi
+        done
+
+        # 删除系统级目录
+        if [ -d "/usr/share/${PACKAGE_NAME}" ]; then
+            rm -rf /usr/share/${PACKAGE_NAME}
+            echo "Removed system-wide directory: /usr/share/${PACKAGE_NAME}"
+        fi
+        ;;
+
+    upgrade|failed-upgrade|abort-remove)
+        # 升级时不执行清理操作
+        ;;
+
+    *)
+        echo "postrm called with unknown argument \\\`\$1'" >&2
+        exit 1
+        ;;
+esac
+
+# 更新桌面数据库
 update-desktop-database
+
+exit 0
 EOL
 chmod +x ${FULL_PACKAGE_NAME}/DEBIAN/postrm
 

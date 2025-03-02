@@ -376,7 +376,7 @@ class Main_Frame(Main_Ui_Frame):
             if wallpaper_dir=="":
                 # wx.MessageBox('请选择壁纸目录', '错误', wx.OK | wx.ICON_ERROR)
                 # 在主线程中更新 UI
-                wx.CallAfter(self.m_staticText_status.SetLabel, "请选择壁纸目录")
+                wx.CallAfter(self.m_staticText_status.SetLabel, "注意！请选择壁纸目录。")
                 return
             # 获取用户设置的时间间隔（分钟），并转换为秒
             interval = self.m_spinCtrl_interval.GetValue() * 60  # 转换为秒
@@ -390,7 +390,7 @@ class Main_Frame(Main_Ui_Frame):
             if not self.wallpapers:
                 # wx.MessageBox('wallpapers文件夹中没有图片', '错误',wx.OK | wx.ICON_ERROR)
                 # 在主线程中更新 UI
-                wx.CallAfter(self.m_staticText_status.SetLabel, "wallpapers目录中没有图片")
+                wx.CallAfter(self.m_staticText_status.SetLabel, "注意！wallpapers目录中没有图片。")
                 return
 
             # 设置运行标志为True

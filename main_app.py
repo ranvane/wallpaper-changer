@@ -11,173 +11,12 @@ import shutil
 import sys
 from wx.adv import TaskBarIcon
 from Wallpaper_changer_UI import Main_Ui_Frame
+from WallpaperChangerTaskBarIcon import WallpaperChangerTaskBarIcon
+from my_logger import logger,RESOURCE_PATH,IS_PRODUCTION
 
-# 定义环境标志
-IS_PRODUCTION = os.path.dirname(os.path.abspath(
-    sys.argv[0])) == '/usr/local/bin'
-logger.info(f"IS_PRODUCTION: {IS_PRODUCTION}")
-# 定义资源路径
-if IS_PRODUCTION:
-    # 生产环境：使用 /usr/share/wallpaper-changer
-    RESOURCE_PATH = "/usr/share/wallpaper-changer"
-    
-    logger.remove()  # 移除默认的处理器
-    
-    logger.add(sys.stderr, level="INFO")  # 这里设置为 INFO 级别
+from ConfigMixin import ConfigMixin
 
-else:
-    # 开发环境：使用当前文件所在目录
-    RESOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
-    logger.remove()  # 移除默认的处理器
-    logger.add(sys.stderr, level="DEBUG")  # 这里设置为 DEBUG 级别
-    
-
-# 确保资源路径存在
-if not os.path.exists(RESOURCE_PATH):
-    logger.debug(f"警告: 资源路径 {RESOURCE_PATH} 不存在，将使用当前目录作为资源路径")
-    RESOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
-
-logger.info(f"环境: {'生产' if IS_PRODUCTION else '开发'}")
-logger.info(f"使用资源路径: {RESOURCE_PATH}")
-
-
-class WallpaperChangerTaskBarIcon(TaskBarIcon):
-
-    def __init__(self, frame):
-        """
-        初始化 WallpaperChangerTaskBarIcon 类的实例。
-
-        Args:
-            frame (wx.Frame): 主应用程序窗口的引用
-        """
-        # 调用父类 TaskBarIcon 的初始化方法
-        super().__init__()
-        # 保存对主窗口的引用
-        self.frame = frame
-        self.icon = None
-        self.load_icon()
-
-        # 绑定左键点击事件到 on_left_down 方法
-        self.Bind(wx.adv.EVT_TASKBAR_LEFT_DOWN, self.on_left_down)
-
-    def load_icon(self):
-        icon_path = os.path.join(RESOURCE_PATH, "icon.png")
-        logger.debug(f"尝试加载图标: {icon_path} 是否存在：{os.path.exists(icon_path)}")
-
-        if not os.path.exists(icon_path):
-            logger.error(f"图标文件不存在: {icon_path}")
-            return
-
-        try:
-            self.icon = wx.Icon(icon_path)
-            if not self.icon.IsOk():
-                logger.error("图标加载失败：无效的图标数据")
-                return
-
-            if self.SetIcon(self.icon, "壁纸更换器"):
-                logger.debug("成功设置托盘图标")
-
-            else:
-                logger.error("设置托盘图标失败")
-            logger.debug(f"Icon successfully set: {self.icon.IsOk()}")
-            logger.debug(f"Icon set to taskbar: {self.IsAvailable()}")
-        except Exception as e:
-            logger.exception(f"加载托盘图标时发生异常: {e}")
-
-    def on_left_down(self, event):
-        """
-        处理任务栏图标左键点击事件的方法。
-
-        当用户左键点击任务栏图标时，此方法会被调用，用于显示主窗口。
-
-        Args:
-            event: 鼠标事件对象（在此方法中未被使用）
-        """
-        logger.debug("托盘图标被点击")
-
-        if self.frame:
-            self.frame.Show()
-            self.frame.Raise()
-        else:
-            logger.warning("主窗口引用无效")
-        event.Skip()  # 确保事件能够继续传递
-
-    def CreatePopupMenu(self):
-        """
-        创建任务栏图标的弹出菜单。
-
-        Returns:
-            wx.Menu: 包含各种操作选项的弹出菜单
-        """
-        menu = wx.Menu()
-
-        # 添加"显示主窗口"菜单项
-        show_item = menu.Append(wx.ID_ANY, "显示主窗口")
-
-        # 添加"上一张"菜单项
-        pre_item = menu.Append(wx.ID_ANY, "上一张")
-
-        # 添加"下一张"菜单项
-        next_item = menu.Append(wx.ID_ANY, "下一张")
-
-        # 添加"退出"菜单项
-        exit_item = menu.Append(wx.ID_ANY, "退出")
-
-        # 绑定事件处理器
-        # 注意：绑定事件的顺序与菜单项的添加顺序相同
-        self.Bind(wx.EVT_MENU, self.on_show, show_item)
-        self.Bind(wx.EVT_MENU, self.on_pre, pre_item)
-        self.Bind(wx.EVT_MENU, self.on_next, next_item)
-        self.Bind(wx.EVT_MENU, self.on_exit, exit_item)
-
-        return menu
-
-    def on_pre(self, event):
-        """切换到上一张壁纸"""
-        if self.frame:
-            wx.CallAfter(self.frame.on_prev, event)
-        else:
-            logger.warning("无法切换到上一张壁纸：主窗口引用无效")
-
-    def on_next(self, event):
-        """切换到下一张壁纸"""
-        if self.frame:
-            wx.CallAfter(self.frame.on_next, event)
-        else:
-            logger.warning("无法切换到下一张壁纸：主窗口引用无效")
-
-    def on_show(self, event):
-        """显示主窗口"""
-        if self.frame:
-            self.frame.Show()
-            self.frame.Raise()
-        else:
-            logger.warning("无法显示主窗口：主窗口引用无效")
-
-    def on_exit(self, event):
-        """退出应用程序"""
-        if self.frame:
-            wx.CallAfter(self.frame.on_exit, event)
-        else:
-            logger.warning("无法正常退出：主窗口引用无效")
-            wx.CallAfter(wx.GetApp().ExitMainLoop)
-
-    def Destroy(self):
-        """
-        销毁托盘图标并释放资源。
-        """
-        try:
-            self.RemoveIcon()
-            if self.icon:
-                del self.icon
-            logger.debug("托盘图标已成功销毁")
-        except Exception as e:
-            logger.error(f"销毁托盘图标时出错: {e}")
-        finally:
-            super().Destroy()
-
-
-class Main_Frame(Main_Ui_Frame):
+class Main_Frame(Main_Ui_Frame,ConfigMixin):
 
     def __init__(self):
         super().__init__(parent=None)
@@ -236,59 +75,7 @@ class Main_Frame(Main_Ui_Frame):
 
         wx.CallAfter(do_hide)
 
-    def load_config(self):
-        """
-        加载配置文件的方法。
 
-        此方法尝试从配置文件中读取设置，并将其应用到UI控件上。
-        如果配置文件存在，它会加载目录路径和时间间隔设置。
-        """
-        logger.debug("Loading configuration...")
-
-        if os.path.exists(self.config_file):
-            # 如果配置文件存在，则打开并读取内容
-            with open(self.config_file, 'r') as f:
-                config = json.load(f)
-                # 设置目录选择器的路径
-                self.m_dirPicker.SetPath(config.get('directory', ''))
-                # 设置时间间隔控件的值
-                self.m_spinCtrl_interval.SetValue(config.get('interval', 60))
-                # 显示壁纸目录路径
-                self.m_staticText_dirpath.SetLabel(
-                    f"壁纸目录: {self.m_dirPicker.GetPath()}")
-                # 选择是否开机启动隐藏窗口
-                self.m_checkBox_startHideWin.SetValue(
-                    config.get('hidewindown', True))
-
-    def save_config(self):
-        """
-        保存配置到文件的方法。
-
-        此方法将当前的设置（包括壁纸目录和更换间隔）保存到配置文件中。
-        """
-        logger.debug("Save configuration...")
-
-        # 创建包含当前设置的配置字典
-        config = {
-            'directory': self.m_dirPicker.GetPath(),
-            'interval': self.m_spinCtrl_interval.GetValue(),
-            'hidewindown': self.m_checkBox_startHideWin.GetValue()
-        }
-
-        # 确保配置目录存在
-        config_dir = os.path.dirname(self.config_file)
-        Path(config_dir).mkdir(parents=True, exist_ok=True)
-
-        try:
-            # 尝试将配置写入文件
-            with open(self.config_file, 'w') as f:
-                json.dump(config, f)
-            logger.debug(f"配置已保存到 {self.config_file}")
-            self.m_staticText_status.SetLabel(f"配置已保存！")
-        except Exception as e:
-            # 如果保存过程中出现错误，记录错误并更新状态文本
-            logger.error(f"保存配置时出错: {e}")
-            self.m_staticText_status.SetLabel(f"保存配置失败: {e}")
 
     def check_autostart(self):
 
@@ -443,37 +230,6 @@ class Main_Frame(Main_Ui_Frame):
                 logger.warning("线程未能在预期时间内结束")
 
         wx.CallAfter(self._cleanup)
-
-    def _check_thread_status(self):
-        """
-        检查壁纸更换线程的状态。
-
-        如果线程仍在运行，则延迟100毫秒后再次检查。
-        如果线程已结束，则执行清理操作。
-        """
-        if self.thread and self.thread.is_alive():
-            # 线程仍在运行，100毫秒后再次检查
-            wx.CallLater(100, self._check_thread_status)
-        else:
-            # 线程已结束，执行清理操作
-            self._cleanup()
-
-    def _cleanup(self):
-        """
-        清理资源和重置状态的方法。
-        """
-        logger.debug("正在清理资源...")
-        self.running = False
-        if hasattr(self, 'thread'):
-            del self.thread
-
-        wx.CallAfter(self.m_button_start.Enable)
-        wx.CallAfter(self.m_button_stop.Disable)
-        wx.CallAfter(self.m_button_prev.Disable)
-        wx.CallAfter(self.m_button_next.Disable)
-        wx.CallAfter(self.m_staticText_status.SetLabel, "已停止更换壁纸")
-        logger.debug("资源清理完成")
-
     def on_prev(self, event):
         """
         切换到上一张壁纸的方法。
@@ -515,6 +271,37 @@ class Main_Frame(Main_Ui_Frame):
         except Exception as e:
             # 捕获并记录任何异常
             logger.error(f"on_next出错: {e}")
+    def _check_thread_status(self):
+        """
+        检查壁纸更换线程的状态。
+
+        如果线程仍在运行，则延迟100毫秒后再次检查。
+        如果线程已结束，则执行清理操作。
+        """
+        if self.thread and self.thread.is_alive():
+            # 线程仍在运行，100毫秒后再次检查
+            wx.CallLater(100, self._check_thread_status)
+        else:
+            # 线程已结束，执行清理操作
+            self._cleanup()
+
+    def _cleanup(self):
+        """
+        清理资源和重置状态的方法。
+        """
+        logger.debug("正在清理资源...")
+        self.running = False
+        if hasattr(self, 'thread'):
+            del self.thread
+
+        wx.CallAfter(self.m_button_start.Enable)
+        wx.CallAfter(self.m_button_stop.Disable)
+        wx.CallAfter(self.m_button_prev.Disable)
+        wx.CallAfter(self.m_button_next.Disable)
+        wx.CallAfter(self.m_staticText_status.SetLabel, "已停止更换壁纸")
+        logger.debug("资源清理完成")
+
+
 
     def on_auto_start_changed(self, event):
         """

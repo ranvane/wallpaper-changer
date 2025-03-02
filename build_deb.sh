@@ -17,10 +17,13 @@ mkdir -p ${FULL_PACKAGE_NAME}/usr/share/applications
 mkdir -p ${FULL_PACKAGE_NAME}/usr/share/${PACKAGE_NAME}
 
 # 复制文件到相应目录
-cp main_app.py ${FULL_PACKAGE_NAME}/usr/local/bin/wallpaper-changer.py
-cp Wallpaper_changer_UI.py ${FULL_PACKAGE_NAME}/usr/local/bin/Wallpaper_changer_UI.py
-cp icon.png ${FULL_PACKAGE_NAME}/usr/share/${PACKAGE_NAME}/
-cp -r resources ${FULL_PACKAGE_NAME}/usr/share/${PACKAGE_NAME}/
+cp main_app.py                    ${FULL_PACKAGE_NAME}/usr/local/bin/wallpaper-changer.py
+cp Wallpaper_changer_UI.py        ${FULL_PACKAGE_NAME}/usr/local/bin/Wallpaper_changer_UI.py
+cp ConfigMixin.py                 ${FULL_PACKAGE_NAME}/usr/local/bin/ConfigMixin.py
+cp WallpaperChangerTaskBarIcon.py ${FULL_PACKAGE_NAME}/usr/local/bin/WallpaperChangerTaskBarIcon.py
+cp my_logger.py                   ${FULL_PACKAGE_NAME}/usr/local/bin/my_logger.py
+cp icon.png                       ${FULL_PACKAGE_NAME}/usr/share/${PACKAGE_NAME}/
+cp -r resources                   ${FULL_PACKAGE_NAME}/usr/share/${PACKAGE_NAME}/
 
 # 创建 DEBIAN/control 文件
 cat > ${FULL_PACKAGE_NAME}/DEBIAN/control << EOL

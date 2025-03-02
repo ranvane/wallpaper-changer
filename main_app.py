@@ -128,7 +128,7 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
         Args:
             event: 触发此方法的事件对象（未使用）
         """
-        WallpaperProcessor.on_prev(self)
+        WallpaperProcessor.on_prev(event)
 
     def on_next(self, event):
         """
@@ -140,9 +140,9 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
         Args:
             event: 触发此方法的事件对象（未使用）
         """
-        WallpaperProcessor.on_next(self)
+        WallpaperProcessor.on_next()
 
-    def on_auto_start_changed(event):
+    def on_auto_start_changed(self,event):
         """
         处理自动启动选项变更的方法。
 

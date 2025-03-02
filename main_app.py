@@ -674,7 +674,19 @@ class Main_Frame(Main_Ui_Frame):
         except Exception as e:
             logger.error(f"更新当前壁纸信息时出错: {e}")
 
+    def on_select_Save_Folder(self, event):
+        """
+        选择保存图片的文件夹,并将选择的路径显示到文本控件中。
 
+        Args:
+            event: 触发此方法的事件对象
+        """
+        dlg = wx.DirDialog(self, "选择保存图片的文件夹", style=wx.DD_DEFAULT_STYLE)
+        if dlg.ShowModal() == wx.ID_OK:
+            selected_path = dlg.GetPath()
+            self.m_textCtrl_save_folder.SetValue(selected_path)
+            logger.info(f"选择的保存路径: {selected_path}")
+        dlg.Destroy()
 if __name__ == '__main__':
     app = wx.App()
     # 设置应用程序名称和图标、取消，会影响托盘图标加载

@@ -179,3 +179,5 @@ cython_debug/
 wallpaper-changer*/
 wallpaper-changer_1.0-1/
 .vscode/
+bing_wallpapers/*
+bing_wallpapers*/

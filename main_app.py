@@ -300,9 +300,6 @@ class Main_Frame(Main_Ui_Frame,ConfigMixin):
         wx.CallAfter(self.m_button_next.Disable)
         wx.CallAfter(self.m_staticText_status.SetLabel, "已停止更换壁纸")
         logger.debug("资源清理完成")
-
-
-
     def on_auto_start_changed(self, event):
         """
         处理自动启动选项变更的方法。

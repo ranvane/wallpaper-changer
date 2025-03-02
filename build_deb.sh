@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 设置版本号变量
-VERSION="1.1.0"
+VERSION="1.1.2"
 
 # 设置包名变量
 PACKAGE_NAME="wallpaper-changer"

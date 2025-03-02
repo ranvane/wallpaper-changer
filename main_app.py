@@ -15,38 +15,30 @@ from Wallpaper_changer_UI import Main_Ui_Frame
 # 定义环境标志
 IS_PRODUCTION = os.path.dirname(os.path.abspath(
     sys.argv[0])) == '/usr/local/bin'
-
+logger.info(f"IS_PRODUCTION: {IS_PRODUCTION}")
 # 定义资源路径
 if IS_PRODUCTION:
     # 生产环境：使用 /usr/share/wallpaper-changer
     RESOURCE_PATH = "/usr/share/wallpaper-changer"
     
     logger.remove()  # 移除默认的处理器
-    logger.add(
-        sink=sys.stdout,  # 输出到标准输出
-        format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
-        colorize=True,  # 启用颜色输出
-        level="DEBUG"  # 设置最低日志级别
-    )
+    
+    logger.add(sys.stderr, level="INFO")  # 这里设置为 INFO 级别
 
 else:
     # 开发环境：使用当前文件所在目录
     RESOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
     logger.remove()  # 移除默认的处理器
-    logger.add(
-        sink=sys.stdout,  # 输出到标准输出
-        format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
-        colorize=True,  # 启用颜色输出
-        level="INFO"  # 设置最低日志级别
-    )
+    logger.add(sys.stderr, level="DEBUG")  # 这里设置为 DEBUG 级别
+    
 
 # 确保资源路径存在
 if not os.path.exists(RESOURCE_PATH):
     logger.debug(f"警告: 资源路径 {RESOURCE_PATH} 不存在，将使用当前目录作为资源路径")
     RESOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
 
-logger.debug(f"环境: {'生产' if IS_PRODUCTION else '开发'}")
-logger.debug(f"使用资源路径: {RESOURCE_PATH}")
+logger.info(f"环境: {'生产' if IS_PRODUCTION else '开发'}")
+logger.info(f"使用资源路径: {RESOURCE_PATH}")
 
 
 class WallpaperChangerTaskBarIcon(TaskBarIcon):
@@ -381,6 +373,9 @@ class Main_Frame(Main_Ui_Frame):
         try:
             # 获取用户选择的壁纸目录路径
             wallpaper_dir = self.m_dirPicker.GetPath()
+            if wallpaper_dir=="":
+                # wx.MessageBox('请选择壁纸目录', '错误', wx.OK | wx.ICON_ERROR)
+                return
             # 获取用户设置的时间间隔（分钟），并转换为秒
             interval = self.m_spinCtrl_interval.GetValue() * 60  # 转换为秒
 
@@ -391,7 +386,7 @@ class Main_Frame(Main_Ui_Frame):
             ]
             # 如果没有找到图片文件，显示错误消息并返回
             if not self.wallpapers:
-                wx.MessageBox('bing_wallpapers文件夹中没有图片', '错误',
+                wx.MessageBox('wallpapers文件夹中没有图片', '错误',
                               wx.OK | wx.ICON_ERROR)
                 return
 

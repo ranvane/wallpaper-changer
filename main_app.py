@@ -14,12 +14,15 @@ from Wallpaper_changer_UI import Main_Ui_Frame
 from WallpaperChangerTaskBarIcon import WallpaperChangerTaskBarIcon
 from my_logger import logger, RESOURCE_PATH, IS_PRODUCTION
 from WallpaperProcessor import WallpaperProcessor
+from DownloadProcessor import DownloadProcessor
 from ConfigMixin import ConfigMixin
+from YearMonthPicker import YearMonthPicker
 
 class Main_Frame(Main_Ui_Frame,ConfigMixin):
 
     def __init__(self):
         super().__init__(parent=None)
+        
         
 
         self.running = False
@@ -70,26 +73,29 @@ class Main_Frame(Main_Ui_Frame,ConfigMixin):
     def init_processors(self):
         # 初始化处理器实例
         self.wallpaper_processor = WallpaperProcessor(self)
-        # self.ConfigProcessor=ConfigProcessor(self)
-        # self.download_processor = DownloadProcessor(self)
+        self.download_processor = DownloadProcessor(self)
 
     def bind_events(self):
         # 将 Main_Ui_Frame 中的事件绑定到处理器的方法
         # 绑定事件
         self.Bind(wx.EVT_CLOSE, self.on_close)
+        # 更换壁纸按钮事件
         self.m_dirPicker.Bind( wx.EVT_DIRPICKER_CHANGED, self.wallpaper_processor.on_m_dirPicker_changed )
         self.m_button_start.Bind( wx.EVT_BUTTON, self.wallpaper_processor.on_start )
         self.m_button_stop.Bind( wx.EVT_BUTTON, self.wallpaper_processor.on_stop )
         self.m_button_prev.Bind( wx.EVT_BUTTON, self.wallpaper_processor.on_prev )
         self.m_button_next.Bind( wx.EVT_BUTTON, self.wallpaper_processor.on_next )
         self.m_checkBox_autoStart.Bind( wx.EVT_CHECKBOX, self.wallpaper_processor.on_auto_start_changed )
-        # self.m_checkBox_startHideWin.Bind( wx.EVT_CHECKBOX, self.wallpaper_processor.on_startHideWin_changed )
         self.m_button_exit.Bind( wx.EVT_BUTTON, self.on_exit )
-        # self.m_button_select_Save_Folder.Bind( wx.EVT_BUTTON, self.wallpaper_processor.on_select_Save_Folder )
+        
+        #下载壁纸按钮事件
+        self.m_button_select_Save_Folder.Bind( wx.EVT_BUTTON, self.download_processor.on_select_Save_Folder )
+        self.m_button_start_Download.Bind( wx.EVT_BUTTON, self.download_processor.on_start_Download )
 
 
 
     def check_autostart(self):
+        '''检查是否设置了开机启动'''
 
         self.wallpaper_processor.check_autostart()
 
@@ -142,19 +148,7 @@ class Main_Frame(Main_Ui_Frame,ConfigMixin):
 
 
 
-    def on_select_Save_Folder(self, event):
-        """
-        选择保存图片的文件夹,并将选择的路径显示到文本控件中。
 
-        Args:
-            event: 触发此方法的事件对象
-        """
-        dlg = wx.DirDialog(self, "选择保存图片的文件夹", style=wx.DD_DEFAULT_STYLE)
-        if dlg.ShowModal() == wx.ID_OK:
-            selected_path = dlg.GetPath()
-            self.m_textCtrl_save_folder.SetValue(selected_path)
-            logger.info(f"选择的保存路径: {selected_path}")
-        dlg.Destroy()
 
 
 if __name__ == '__main__':

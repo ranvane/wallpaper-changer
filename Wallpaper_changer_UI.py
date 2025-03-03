@@ -9,7 +9,7 @@
 
 import wx
 import wx.xrc
-import wx.adv
+from YearMonthPicker import YearMonthPicker
 import wx.richtext
 
 import gettext
@@ -130,31 +130,37 @@ class Main_Ui_Frame ( wx.Frame ):
 
         bSizer8.Add( bSizer9, 0, wx.EXPAND, 5 )
 
-        bSizer10 = wx.BoxSizer( wx.HORIZONTAL )
+        bSizer10 = wx.BoxSizer( wx.VERTICAL )
+
+        bSizer131 = wx.BoxSizer( wx.HORIZONTAL )
 
         self.m_staticText5 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u"开始日期:"), wx.DefaultPosition, wx.Size( 70,34 ), 0 )
         self.m_staticText5.Wrap( -1 )
 
         self.m_staticText5.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
-        bSizer10.Add( self.m_staticText5, 0, wx.ALL, 5 )
+        bSizer131.Add( self.m_staticText5, 0, wx.ALL, 5 )
 
-        self.m_datePicker_start = wx.adv.DatePickerCtrl( self.m_panel2, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition, wx.Size( -1,34 ), wx.adv.DP_DEFAULT )
-        self.m_datePicker_start.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_datePicker_start= YearMonthPicker(self.m_panel2, min_year=2021, min_month=2)
+        bSizer131.Add( self.m_datePicker_start, 0, wx.ALL, 5 )
 
-        bSizer10.Add( self.m_datePicker_start, 0, wx.ALL, 5 )
+
+        bSizer10.Add( bSizer131, 0, wx.EXPAND, 5 )
+
+        bSizer15 = wx.BoxSizer( wx.HORIZONTAL )
 
         self.m_staticText6 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u"结束日期:"), wx.DefaultPosition, wx.Size( 70,34 ), 0 )
         self.m_staticText6.Wrap( -1 )
 
         self.m_staticText6.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
-        bSizer10.Add( self.m_staticText6, 0, wx.ALL, 5 )
+        bSizer15.Add( self.m_staticText6, 0, wx.ALL, 5 )
 
-        self.m_datePicker_end = wx.adv.DatePickerCtrl( self.m_panel2, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition, wx.Size( -1,34 ), wx.adv.DP_ALLOWNONE|wx.adv.DP_DEFAULT|wx.adv.DP_DROPDOWN|wx.adv.DP_SHOWCENTURY )
-        self.m_datePicker_end.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_datePicker_end = YearMonthPicker(self.m_panel2, min_year=2021, min_month=2)
+        bSizer15.Add( self.m_datePicker_end, 0, wx.ALL, 5 )
 
-        bSizer10.Add( self.m_datePicker_end, 0, wx.ALL, 5 )
+
+        bSizer10.Add( bSizer15, 0, wx.EXPAND, 5 )
 
 
         bSizer8.Add( bSizer10, 0, wx.EXPAND, 5 )
@@ -247,6 +253,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_checkBox_startHideWin.Bind( wx.EVT_CHECKBOX, self.on_startHideWin_changed )
         self.m_button_exit.Bind( wx.EVT_BUTTON, self.on_exit )
         self.m_button_select_Save_Folder.Bind( wx.EVT_BUTTON, self.on_select_Save_Folder )
+        self.m_button_start_Download.Bind( wx.EVT_BUTTON, self.on_start_Download )
 
     def __del__( self ):
         pass
@@ -278,6 +285,9 @@ class Main_Ui_Frame ( wx.Frame ):
         event.Skip()
 
     def on_select_Save_Folder( self, event ):
+        event.Skip()
+
+    def on_start_Download( self, event ):
         event.Skip()
 
 

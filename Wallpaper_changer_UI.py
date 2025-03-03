@@ -110,7 +110,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_panel1.SetSizer( bSizer1 )
         self.m_panel1.Layout()
         bSizer1.Fit( self.m_panel1 )
-        self.m_notebook1.AddPage( self.m_panel1, _(u"壁纸切换"), False )
+        self.m_notebook1.AddPage( self.m_panel1, _(u"壁纸切换"), True )
         self.m_panel2 = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         bSizer8 = wx.BoxSizer( wx.VERTICAL )
 
@@ -142,7 +142,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_datePicker_start = wx.adv.DatePickerCtrl( self.m_panel2, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition, wx.Size( -1,34 ), wx.adv.DP_DEFAULT )
         self.m_datePicker_start.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
-        bSizer10.Add( self.m_datePicker_start, 1, wx.ALL, 5 )
+        bSizer10.Add( self.m_datePicker_start, 0, wx.ALL, 5 )
 
         self.m_staticText6 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u"结束日期:"), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
         self.m_staticText6.Wrap( -1 )
@@ -154,7 +154,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_datePicker_end = wx.adv.DatePickerCtrl( self.m_panel2, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition, wx.Size( -1,34 ), wx.adv.DP_ALLOWNONE|wx.adv.DP_DEFAULT|wx.adv.DP_DROPDOWN|wx.adv.DP_SHOWCENTURY )
         self.m_datePicker_end.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
-        bSizer10.Add( self.m_datePicker_end, 1, wx.ALL, 5 )
+        bSizer10.Add( self.m_datePicker_end, 0, wx.ALL, 5 )
 
 
         bSizer8.Add( bSizer10, 0, wx.EXPAND, 5 )
@@ -227,7 +227,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_panel2.SetSizer( bSizer8 )
         self.m_panel2.Layout()
         bSizer8.Fit( self.m_panel2 )
-        self.m_notebook1.AddPage( self.m_panel2, _(u"壁纸下载"), True )
+        self.m_notebook1.AddPage( self.m_panel2, _(u"壁纸下载"), False )
 
         bSizer6.Add( self.m_notebook1, 1, wx.EXPAND |wx.ALL, 5 )
 

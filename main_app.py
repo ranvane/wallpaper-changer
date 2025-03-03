@@ -14,14 +14,14 @@ from Wallpaper_changer_UI import Main_Ui_Frame
 from WallpaperChangerTaskBarIcon import WallpaperChangerTaskBarIcon
 from my_logger import logger, RESOURCE_PATH, IS_PRODUCTION
 from WallpaperProcessor import WallpaperProcessor
-from ConfigMixin import ConfigMixin
+from ConfigProcessor import ConfigProcessor
 
 
-class Main_Frame(Main_Ui_Frame, ConfigMixin):
+class Main_Frame(Main_Ui_Frame):
 
     def __init__(self):
         super().__init__(parent=None)
-        self.processor = WallpaperProcessor(self)
+        
 
         self.running = False
         self.thread = None
@@ -45,14 +45,18 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
             self.home_dir = Path.home()  # 获取用户主目录路径
             self.autostart_dir = self.home_dir / '.config' / 'autostart'  # 设置自动启动目录路径
             self.desktop_file = self.autostart_dir / 'wallpaper_changer.desktop'  # 设置桌面文件路径
+            
+            
+            self.init_processors()# 初始化处理器
+            self.bind_events()# 绑定事件
+            
             # 加载配置
-            self.load_config()
+            self.ConfigProcessor.load_config()
 
             # 检查是否设置了开机启动
             self.check_autostart()
 
-            # 绑定事件
-            self.Bind(wx.EVT_CLOSE, self.on_close)
+
             # 初始化系统托盘图标
             try:
                 taskbar_icon = WallpaperChangerTaskBarIcon(self)
@@ -64,20 +68,32 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
         except Exception as e:
             logger.error(f"初始化时出错: {e}")
 
-    def hide_window(self):
-        """
-        隐藏主窗口到系统托盘的方法。
-        使用wx.CallAfter确保在主事件循环中执行隐藏操作。
-        """
+    def init_processors(self):
+        # 初始化处理器实例
+        self.wallpaper_processor = WallpaperProcessor(self)
+        self.ConfigProcessor=ConfigProcessor(self)
+        # self.download_processor = DownloadProcessor(self)
 
-        self.processor.hide_window()
+    def bind_events(self):
+        # 将 Main_Ui_Frame 中的事件绑定到处理器的方法
+        # 绑定事件
+        self.Bind(wx.EVT_CLOSE, self.on_close)
+        self.m_dirPicker.Bind( wx.EVT_DIRPICKER_CHANGED, self.wallpaper_processor.on_m_dirPicker_changed )
+        self.m_button_start.Bind( wx.EVT_BUTTON, self.wallpaper_processor.on_start )
+        self.m_button_stop.Bind( wx.EVT_BUTTON, self.wallpaper_processor.on_stop )
+        self.m_button_prev.Bind( wx.EVT_BUTTON, self.wallpaper_processor.on_prev )
+        self.m_button_next.Bind( wx.EVT_BUTTON, self.wallpaper_processor.on_next )
+        self.m_checkBox_autoStart.Bind( wx.EVT_CHECKBOX, self.wallpaper_processor.on_auto_start_changed )
+        # self.m_checkBox_startHideWin.Bind( wx.EVT_CHECKBOX, self.wallpaper_processor.on_startHideWin_changed )
+        self.m_button_exit.Bind( wx.EVT_BUTTON, self.on_exit )
+        # self.m_button_select_Save_Folder.Bind( wx.EVT_BUTTON, self.wallpaper_processor.on_select_Save_Folder )
+
+
 
     def check_autostart(self):
 
-        self.processor.check_autostart()
+        self.wallpaper_processor.check_autostart()
 
-    def on_m_dirPicker_changed(self, event):
-        self.processor.on_m_dirPicker_changed(event)
 
     def on_exit(self, event):
         """
@@ -89,8 +105,29 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
         Args:
             event: 触发退出的事件对象（未使用）
         """
-        self.processor.on_exit(event)
+        logger.debug("开始执行退出操作")
 
+        # 停止壁纸更换进程
+        self.wallpaper_processor.on_stop(event)
+
+        # 保存配置
+        self.ConfigProcessor.save_config()
+
+        # 销毁系统托盘图标
+        if hasattr(self, 'taskbar_icon') and self.main_frame.taskbar_icon:
+            logger.debug("正在销毁系统托盘图标")
+            wx.CallAfter(self.main_frame.taskbar_icon.Destroy)
+
+        # 销毁主窗口
+        logger.debug("正在销毁主窗口")
+        self.Destroy()
+
+        # 使用 wx.CallAfter 确保在主事件循环中退出应用
+        logger.debug("准备退出应用程序")
+        wx.CallAfter(wx.GetApp().ExitMainLoop)
+
+
+        
     def on_close(self, event):
         """
         处理窗口关闭事件的方法。
@@ -101,59 +138,10 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
         Args:
             event (wx.CloseEvent): 关闭窗口的事件对象
         """
-        self.processor.on_close(event)
+        self.Hide()
+        event.Veto()  # 阻止默认的关闭行为
 
-    def on_start(self, event):
-        self.processor.on_start(event)
 
-    def on_stop(self, event):
-        """
-        停止壁纸更换的方法。
-
-        当用户点击停止按钮时调用此方法。它会停止壁纸更换进程，
-        更新UI状态，并启动非阻塞的线程清理过程。
-
-        Args:
-            event: 触发此方法的事件对象（未使用）
-        """
-        self.processor.on_stop(event)
-
-    def on_prev(self, event):
-        """
-        切换到上一张壁纸的方法。
-
-        当用户点击"上一张"按钮时调用此方法。它会将当前壁纸索引减1（循环到列表末尾），
-        然后设置新的壁纸。
-
-        Args:
-            event: 触发此方法的事件对象（未使用）
-        """
-        WallpaperProcessor.on_prev(event)
-
-    def on_next(self, event):
-        """
-        切换到下一张壁纸的方法。
-
-        当用户点击"下一张"按钮时调用此方法。它会将当前壁纸索引加1（循环到列表开头），
-        然后设置新的壁纸。
-
-        Args:
-            event: 触发此方法的事件对象（未使用）
-        """
-        WallpaperProcessor.on_next()
-
-    def on_auto_start_changed(self,event):
-        """
-        处理自动启动选项变更的方法。
-
-        当用户切换自动启动复选框时调用此方法。它会根据用户的选择
-        创建或删除开机自启动文件。
-
-        Args:
-            event: 触发此方法的事件对象（未使用）
-        """
-
-        WallpaperProcessor.on_auto_start_changed(event)
 
     def on_select_Save_Folder(self, event):
         """

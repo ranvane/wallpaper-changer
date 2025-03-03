@@ -13,9 +13,8 @@ from wx.adv import TaskBarIcon
 from Wallpaper_changer_UI import Main_Ui_Frame
 from WallpaperChangerTaskBarIcon import WallpaperChangerTaskBarIcon
 from my_logger import logger,RESOURCE_PATH,IS_PRODUCTION
-from ConfigMixin import ConfigMixin
 
-class WallpaperProcessor(ConfigMixin):
+class WallpaperProcessor():
     def __init__(self, main_frame):
         self.main_frame = main_frame
             
@@ -54,51 +53,9 @@ class WallpaperProcessor(ConfigMixin):
         logger.debug("Directory changed")
         self.main_frame.m_staticText_dirpath.SetLabel(
             f"壁纸目录: {self.main_frame.m_dirPicker.GetPath()}")
-        self.save_config()
+        self.main_frame.ConfigProcessor.save_config()
 
-    def on_exit(self, event):
-        """
-        程序退出时的处理方法。
-
-        此方法负责停止所有正在运行的进程，保存配置，
-        销毁系统托盘图标和主窗口，最后退出应用程序。
-
-        Args:
-            event: 触发退出的事件对象（未使用）
-        """
-        logger.debug("开始执行退出操作")
-
-        # 停止壁纸更换进程
-        self.on_stop(None)
-
-        # 保存配置
-        self.save_config()
-
-        # 销毁系统托盘图标
-        if hasattr(self, 'taskbar_icon') and self.main_frame.taskbar_icon:
-            logger.debug("正在销毁系统托盘图标")
-            wx.CallAfter(self.main_frame.taskbar_icon.Destroy)
-
-        # 销毁主窗口
-        logger.debug("正在销毁主窗口")
-        self.Destroy()
-
-        # 使用 wx.CallAfter 确保在主事件循环中退出应用
-        logger.debug("准备退出应用程序")
-        wx.CallAfter(wx.GetApp().ExitMainLoop)
-
-    def on_close(self, event):
-        """
-        处理窗口关闭事件的方法。
-        
-        当用户尝试关闭窗口时，此方法会被调用。
-        它会隐藏窗口而不是真正关闭程序，使程序继续在后台运行。
-
-        Args:
-            event (wx.CloseEvent): 关闭窗口的事件对象
-        """
-        self.main_frame.Hide()
-        event.Veto()  # 阻止默认的关闭行为
+    
 
     def on_start(self, event):
         self._start()
@@ -188,7 +145,7 @@ class WallpaperProcessor(ConfigMixin):
                 logger.warning("线程未能在预期时间内结束")
 
         wx.CallAfter(self._cleanup)
-    def on_prev(self):
+    def on_prev(self, event):
         """
         切换到上一张壁纸的方法。
 
@@ -208,18 +165,18 @@ class WallpaperProcessor(ConfigMixin):
             event: 触发此方法的事件对象（未使用）
         """
         try:
-            logger.debug(f"--- on_prev：当前壁纸列表长度: {len(self.wallpapers)}")
-            if self.wallpapers:
+            logger.debug(f"--- on_prev：当前壁纸列表长度: {len(self.main_frame.wallpapers)}")
+            if self.main_frame.wallpapers:
                 # 计算新的壁纸索引，如果到达列表开头则循环到末尾
-                self.current_index = (self.current_index - 1) % len(
-                    self.wallpapers)
+                self.main_frame.current_index = (self.main_frame.current_index - 1) % len(
+                    self.main_frame.wallpapers)
                 # 设置新的壁纸
-                self._set_wallpaper(self.m_dirPicker.GetPath())
+                self._set_wallpaper(self.main_frame.m_dirPicker.GetPath())
         except Exception as e:
             # 捕获并记录任何异常
             logger.error(f"on_prev出错: {e}")
 
-    def on_next(self):
+    def on_next(self,event):
         """
         切换到下一张壁纸的方法。
 
@@ -236,7 +193,7 @@ class WallpaperProcessor(ConfigMixin):
             if self.main_frame.wallpapers:
                 # 计算新的壁纸索引，如果到达列表末尾则循环到开头
                 self.main_frame.current_index = (self.main_frame.current_index + 1) % len(
-                    self.wallpapers)
+                    self.main_frame.wallpapers)
                 # 设置新的壁纸
                 self._set_wallpaper(self.main_frame.m_dirPicker.GetPath())
         except Exception as e:

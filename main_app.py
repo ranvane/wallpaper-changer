@@ -14,10 +14,9 @@ from Wallpaper_changer_UI import Main_Ui_Frame
 from WallpaperChangerTaskBarIcon import WallpaperChangerTaskBarIcon
 from my_logger import logger, RESOURCE_PATH, IS_PRODUCTION
 from WallpaperProcessor import WallpaperProcessor
-from ConfigProcessor import ConfigProcessor
+from ConfigMixin import ConfigMixin
 
-
-class Main_Frame(Main_Ui_Frame):
+class Main_Frame(Main_Ui_Frame,ConfigMixin):
 
     def __init__(self):
         super().__init__(parent=None)
@@ -51,7 +50,7 @@ class Main_Frame(Main_Ui_Frame):
             self.bind_events()# 绑定事件
             
             # 加载配置
-            self.ConfigProcessor.load_config()
+            self.load_config()
 
             # 检查是否设置了开机启动
             self.check_autostart()
@@ -71,7 +70,7 @@ class Main_Frame(Main_Ui_Frame):
     def init_processors(self):
         # 初始化处理器实例
         self.wallpaper_processor = WallpaperProcessor(self)
-        self.ConfigProcessor=ConfigProcessor(self)
+        # self.ConfigProcessor=ConfigProcessor(self)
         # self.download_processor = DownloadProcessor(self)
 
     def bind_events(self):
@@ -111,7 +110,7 @@ class Main_Frame(Main_Ui_Frame):
         self.wallpaper_processor.on_stop(event)
 
         # 保存配置
-        self.ConfigProcessor.save_config()
+        self.save_config()
 
         # 销毁系统托盘图标
         if hasattr(self, 'taskbar_icon') and self.main_frame.taskbar_icon:

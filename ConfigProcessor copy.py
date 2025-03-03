@@ -4,12 +4,12 @@ from my_logger import logger,RESOURCE_PATH,IS_PRODUCTION
 import json
 from pathlib import Path
 class ConfigProcessor:
-    def __init__(self, main_frame):
-        self.main_frame = main_frame
     """
     配置管理类。
     此类提供了加载和保存配置的方法，以及获取配置值的方法。
     """
+    # def __init__(self, main_frame):
+    #     self.main_frame = main_frame
     def load_config(self):
         """
         加载配置文件的方法。

@@ -18,7 +18,7 @@ class WallpaperProcessor():
     def __init__(self, main_frame):
         self.main_frame = main_frame
             
-    def hide_window(self):
+    def start_hide_window(self):
             """
             隐藏主窗口到系统托盘的方法。
             使用wx.CallAfter确保在主事件循环中执行隐藏操作。
@@ -34,26 +34,29 @@ class WallpaperProcessor():
             wx.CallAfter(do_hide)
 
     def check_autostart(self):
+        try:
+            if self.main_frame.desktop_file.exists():
+                logger.debug("检测到开机自启动设置")
+                self.main_frame.m_checkBox_autoStart.SetValue(True)
 
-        if self.main_frame.desktop_file.exists():
-            logger.debug("检测到开机自启动设置")
-            self.main_frame.m_checkBox_autoStart.SetValue(True)
+                # 开机启动开始更换壁纸
+                self._start()
+                # 隐藏窗口而不是关闭
+                if self.main_frame.m_checkBox_startHideWin.GetValue():
+                    self.start_hide_window()
 
-            # 开机启动开始更换壁纸
-            self._start()
-            # 隐藏窗口而不是关闭
-            if self.main_frame.m_checkBox_startHideWin.GetValue():
-                self.hide_window()
+            else:
+                logger.debug("未检测到开机自启动设置")
+                self.main_frame.m_checkBox_autoStart.SetValue(False)
+        except Exception as e:
+            logger.error(f"check_autostart:{e}") 
 
-        else:
-            logger.debug("未检测到开机自启动设置")
-            self.m_checkBox_autoStart.SetValue(False)
 
     def on_m_dirPicker_changed(self, event):
         logger.debug("Directory changed")
         self.main_frame.m_staticText_dirpath.SetLabel(
             f"壁纸目录: {self.main_frame.m_dirPicker.GetPath()}")
-        self.main_frame.ConfigProcessor.save_config()
+        self.main_frame.save_config()
 
     
 

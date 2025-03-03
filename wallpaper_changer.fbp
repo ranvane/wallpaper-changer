@@ -126,7 +126,7 @@
             <object class="notebookpage" expanded="true">
               <property name="bitmap"></property>
               <property name="label">壁纸切换</property>
-              <property name="select">1</property>
+              <property name="select">0</property>
               <object class="wxPanel" expanded="true">
                 <property name="BottomDockable">1</property>
                 <property name="LeftDockable">1</property>
@@ -1056,7 +1056,7 @@
             <object class="notebookpage" expanded="true">
               <property name="bitmap"></property>
               <property name="label">壁纸下载</property>
-              <property name="select">0</property>
+              <property name="select">1</property>
               <object class="wxPanel" expanded="true">
                 <property name="BottomDockable">1</property>
                 <property name="LeftDockable">1</property>
@@ -1174,7 +1174,7 @@
                           <property name="pos"></property>
                           <property name="resize">Resizable</property>
                           <property name="show">1</property>
-                          <property name="size">-1,34</property>
+                          <property name="size">70,34</property>
                           <property name="style"></property>
                           <property name="subclass">; ; forward_declare</property>
                           <property name="toolbar_pane">0</property>
@@ -1313,7 +1313,7 @@
                           <property name="pos"></property>
                           <property name="resize">Resizable</property>
                           <property name="show">1</property>
-                          <property name="size">-1,34</property>
+                          <property name="size">70,34</property>
                           <property name="style"></property>
                           <property name="subclass">; ; forward_declare</property>
                           <property name="toolbar_pane">0</property>
@@ -1438,7 +1438,7 @@
                           <property name="pos"></property>
                           <property name="resize">Resizable</property>
                           <property name="show">1</property>
-                          <property name="size">-1,34</property>
+                          <property name="size">70,34</property>
                           <property name="style"></property>
                           <property name="subclass">; ; forward_declare</property>
                           <property name="toolbar_pane">0</property>
@@ -1574,7 +1574,7 @@
                           <property name="pos"></property>
                           <property name="resize">Resizable</property>
                           <property name="show">1</property>
-                          <property name="size">-1,34</property>
+                          <property name="size">80,34</property>
                           <property name="style"></property>
                           <property name="subclass">; ; forward_declare</property>
                           <property name="toolbar_pane">0</property>
@@ -1787,7 +1787,7 @@
                           <property name="pos"></property>
                           <property name="resize">Resizable</property>
                           <property name="show">1</property>
-                          <property name="size">-1,34</property>
+                          <property name="size">70,34</property>
                           <property name="style"></property>
                           <property name="subclass">; ; forward_declare</property>
                           <property name="toolbar_pane">0</property>
@@ -1914,7 +1914,7 @@
                           <property name="pos"></property>
                           <property name="resize">Resizable</property>
                           <property name="show">1</property>
-                          <property name="size">-1,34</property>
+                          <property name="size">100,34</property>
                           <property name="style"></property>
                           <property name="subclass">; ; forward_declare</property>
                           <property name="toolbar_pane">0</property>

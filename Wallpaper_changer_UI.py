@@ -110,13 +110,13 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_panel1.SetSizer( bSizer1 )
         self.m_panel1.Layout()
         bSizer1.Fit( self.m_panel1 )
-        self.m_notebook1.AddPage( self.m_panel1, _(u"壁纸切换"), True )
+        self.m_notebook1.AddPage( self.m_panel1, _(u"壁纸切换"), False )
         self.m_panel2 = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         bSizer8 = wx.BoxSizer( wx.VERTICAL )
 
         bSizer9 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.m_staticText4 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u"接口网站:"), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
+        self.m_staticText4 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u"接口网站:"), wx.DefaultPosition, wx.Size( 70,34 ), 0 )
         self.m_staticText4.Wrap( -1 )
 
         self.m_staticText4.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
@@ -132,7 +132,7 @@ class Main_Ui_Frame ( wx.Frame ):
 
         bSizer10 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.m_staticText5 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u"开始日期:"), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
+        self.m_staticText5 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u"开始日期:"), wx.DefaultPosition, wx.Size( 70,34 ), 0 )
         self.m_staticText5.Wrap( -1 )
 
         self.m_staticText5.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
@@ -144,7 +144,7 @@ class Main_Ui_Frame ( wx.Frame ):
 
         bSizer10.Add( self.m_datePicker_start, 0, wx.ALL, 5 )
 
-        self.m_staticText6 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u"结束日期:"), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
+        self.m_staticText6 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u"结束日期:"), wx.DefaultPosition, wx.Size( 70,34 ), 0 )
         self.m_staticText6.Wrap( -1 )
 
         self.m_staticText6.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
@@ -161,7 +161,7 @@ class Main_Ui_Frame ( wx.Frame ):
 
         bSizer12 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.m_staticText9 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u" 保存目录: "), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
+        self.m_staticText9 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u" 保存目录: "), wx.DefaultPosition, wx.Size( 80,34 ), 0 )
         self.m_staticText9.Wrap( -1 )
 
         self.m_staticText9.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
@@ -183,7 +183,7 @@ class Main_Ui_Frame ( wx.Frame ):
 
         bSizer11 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.m_staticText7 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u"分辨率："), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
+        self.m_staticText7 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u"分辨率："), wx.DefaultPosition, wx.Size( 70,34 ), 0 )
         self.m_staticText7.Wrap( -1 )
 
         self.m_staticText7.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
@@ -195,7 +195,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_choice_resolution.SetSelection( 0 )
         bSizer11.Add( self.m_choice_resolution, 0, wx.ALL, 5 )
 
-        self.m_staticText8 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u"下载线程数："), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
+        self.m_staticText8 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u"下载线程数："), wx.DefaultPosition, wx.Size( 100,34 ), 0 )
         self.m_staticText8.Wrap( -1 )
 
         self.m_staticText8.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
@@ -227,7 +227,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_panel2.SetSizer( bSizer8 )
         self.m_panel2.Layout()
         bSizer8.Fit( self.m_panel2 )
-        self.m_notebook1.AddPage( self.m_panel2, _(u"壁纸下载"), False )
+        self.m_notebook1.AddPage( self.m_panel2, _(u"壁纸下载"), True )
 
         bSizer6.Add( self.m_notebook1, 1, wx.EXPAND |wx.ALL, 5 )
 

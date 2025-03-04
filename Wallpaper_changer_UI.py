@@ -23,7 +23,7 @@ class Main_Ui_Frame ( wx.Frame ):
     def __init__( self, parent ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"壁纸更换器"), pos = wx.DefaultPosition, size = wx.Size( 500,380 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 
-        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+        self.SetSizeHints( wx.Size( 500,380 ), wx.Size( 500,380 ) )
 
         bSizer6 = wx.BoxSizer( wx.VERTICAL )
 
@@ -238,6 +238,8 @@ class Main_Ui_Frame ( wx.Frame ):
         self.Layout()
         self.m_statusBar = self.CreateStatusBar( 1, wx.STB_SIZEGRIP, wx.ID_ANY )
         self.m_statusBar.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_statusBar.SetMinSize( wx.Size( -1,30 ) )
+        self.m_statusBar.SetMaxSize( wx.Size( -1,30 ) )
 
 
         self.Centre( wx.BOTH )

@@ -18,12 +18,11 @@ from DownloadProcessor import DownloadProcessor
 from ConfigMixin import ConfigMixin
 from YearMonthPicker import YearMonthPicker
 
-class Main_Frame(Main_Ui_Frame,ConfigMixin):
+
+class Main_Frame(Main_Ui_Frame, ConfigMixin):
 
     def __init__(self):
         super().__init__(parent=None)
-        
-        
 
         self.running = False
         self.thread = None
@@ -47,17 +46,15 @@ class Main_Frame(Main_Ui_Frame,ConfigMixin):
             self.home_dir = Path.home()  # 获取用户主目录路径
             self.autostart_dir = self.home_dir / '.config' / 'autostart'  # 设置自动启动目录路径
             self.desktop_file = self.autostart_dir / 'wallpaper_changer.desktop'  # 设置桌面文件路径
-            
-            
-            self.init_processors()# 初始化处理器
-            self.bind_events()# 绑定事件
-            
+
+            self.init_processors()  # 初始化处理器
+            self.bind_events()  # 绑定事件
+
             # 加载配置
             self.load_config()
 
             # 检查是否设置了开机启动
             self.check_autostart()
-
 
             # 初始化系统托盘图标
             try:
@@ -80,25 +77,35 @@ class Main_Frame(Main_Ui_Frame,ConfigMixin):
         # 绑定事件
         self.Bind(wx.EVT_CLOSE, self.on_close)
         # 更换壁纸按钮事件
-        self.m_dirPicker.Bind( wx.EVT_DIRPICKER_CHANGED, self.wallpaper_processor.on_m_dirPicker_changed )
-        self.m_button_start.Bind( wx.EVT_BUTTON, self.wallpaper_processor.on_start )
-        self.m_button_stop.Bind( wx.EVT_BUTTON, self.wallpaper_processor.on_stop )
-        self.m_button_prev.Bind( wx.EVT_BUTTON, self.wallpaper_processor.on_prev )
-        self.m_button_next.Bind( wx.EVT_BUTTON, self.wallpaper_processor.on_next )
-        self.m_checkBox_autoStart.Bind( wx.EVT_CHECKBOX, self.wallpaper_processor.on_auto_start_changed )
-        self.m_button_exit.Bind( wx.EVT_BUTTON, self.on_exit )
-        
+        self.m_dirPicker.Bind(wx.EVT_DIRPICKER_CHANGED,
+                              self.wallpaper_processor.on_m_dirPicker_changed)
+        self.m_button_start.Bind(wx.EVT_BUTTON,
+                                 self.wallpaper_processor.on_start)
+        self.m_button_stop.Bind(wx.EVT_BUTTON,
+                                self.wallpaper_processor.on_stop)
+        self.m_button_prev.Bind(wx.EVT_BUTTON,
+                                self.wallpaper_processor.on_prev)
+        self.m_button_next.Bind(wx.EVT_BUTTON,
+                                self.wallpaper_processor.on_next)
+        self.m_checkBox_autoStart.Bind(
+            wx.EVT_CHECKBOX, self.wallpaper_processor.on_auto_start_changed)
+        self.m_button_exit.Bind(wx.EVT_BUTTON, self.on_exit)
+
         #下载壁纸按钮事件
-        self.m_button_select_Save_Folder.Bind( wx.EVT_BUTTON, self.download_processor.on_select_Save_Folder )
-        self.m_button_start_Download.Bind( wx.EVT_BUTTON, self.download_processor.on_start_Download )
-
-
+        self.m_button_select_Save_Folder.Bind(
+            wx.EVT_BUTTON, self.download_processor.on_select_Save_Folder)
+        self.m_button_start_Download.Bind(
+            wx.EVT_BUTTON, self.download_processor.on_start_Download)
+        self.m_checkBox_use_Wallpapers_Folder.Bind(
+            wx.EVT_CHECKBOX, self.download_processor.on_checkBox_use_Wallpapers_Folder)
+        
+        
+        
 
     def check_autostart(self):
         '''检查是否设置了开机启动'''
 
         self.wallpaper_processor.check_autostart()
-
 
     def on_exit(self, event):
         """
@@ -131,8 +138,6 @@ class Main_Frame(Main_Ui_Frame,ConfigMixin):
         logger.debug("准备退出应用程序")
         wx.CallAfter(wx.GetApp().ExitMainLoop)
 
-
-        
     def on_close(self, event):
         """
         处理窗口关闭事件的方法。
@@ -145,10 +150,6 @@ class Main_Frame(Main_Ui_Frame,ConfigMixin):
         """
         self.Hide()
         event.Veto()  # 阻止默认的关闭行为
-
-
-
-
 
 
 if __name__ == '__main__':

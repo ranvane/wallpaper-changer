@@ -80,7 +80,7 @@ class WallpaperProcessor():
             if wallpaper_dir=="":
                 # wx.MessageBox('请选择壁纸目录', '错误', wx.OK | wx.ICON_ERROR)
                 # 在主线程中更新 UI
-                wx.CallAfter(self.main_frame.m_staticText_status.SetLabel, "注意！请选择壁纸目录。")
+                wx.CallAfter(self.main_frame.m_statusBar.SetStatusText, "注意！请选择壁纸目录。")
                 return
             # 获取用户设置的时间间隔（分钟），并转换为秒
             interval = self.main_frame.m_spinCtrl_interval.GetValue() * 60  # 转换为秒
@@ -95,7 +95,7 @@ class WallpaperProcessor():
             if not self.main_frame.wallpapers:
                 # wx.MessageBox('wallpapers文件夹中没有图片', '错误',wx.OK | wx.ICON_ERROR)
                 # 在主线程中更新 UI
-                wx.CallAfter(self.main_frame.m_staticText_status.SetLabel, "注意！wallpapers目录中没有图片。")
+                wx.CallAfter(self.main_frame.m_statusBar.SetStatusText, "注意！wallpapers目录中没有图片。")
                 return
 
             # 设置运行标志为True
@@ -229,7 +229,7 @@ class WallpaperProcessor():
         wx.CallAfter(self.main_frame.m_button_stop.Disable)
         wx.CallAfter(self.main_frame.m_button_prev.Disable)
         wx.CallAfter(self.main_frame.m_button_next.Disable)
-        wx.CallAfter(self.main_frame.m_staticText_status.SetLabel, "已停止更换壁纸")
+        wx.CallAfter(self.main_frame.m_statusBar.SetStatusText, "已停止更换壁纸")
         logger.debug("资源清理完成")
     def on_auto_start_changed(self, event):
         """
@@ -276,11 +276,11 @@ class WallpaperProcessor():
 
                 logger.debug(f"已创建开机自启动文件: {self.main_frame.desktop_file}")
                 # wx.MessageBox("已设置开机自动启动", "成功", wx.OK | wx.ICON_INFORMATION)
-                self.main_frame.m_staticText_status.SetLabel(f"已创建开机自启动!")
+                self.main_frame.m_statusBar.SetStatusText(f"已创建开机自启动!")
             except Exception as e:
                 logger.error(f"设置开机自启动失败: {e}")
                 # wx.MessageBox(f"设置开机自启动失败: {e}", "错误", wx.OK | wx.ICON_ERROR)
-                self.main_frame.m_staticText_status.SetLabel(f"设置开机自启动失败!")
+                self.main_frame.m_statusBar.SetStatusText(f"设置开机自启动失败!")
         else:
             logger.debug("用户取消了开机自动启动")
             try:
@@ -289,13 +289,13 @@ class WallpaperProcessor():
                     self.main_frame.desktop_file.unlink()
                     logger.debug(f"已删除开机自启动文件: {self.main_frame.desktop_file}")
                     # wx.MessageBox("已取消开机自动启动", "成功", wx.OK | wx.ICON_INFORMATION)
-                    self.main_frame.m_staticText_status.SetLabel(f"已取消开机自动启动!")
+                    self.main_frame.m_statusBar.SetStatusText(f"已取消开机自动启动!")
                 else:
                     logger.debug("开机自启动文件不存在，无需删除")
             except Exception as e:
                 logger.error(f"取消开机自启动失败: {e}")
                 # wx.MessageBox(f"取消开机自启动失败: {e}", "错误", wx.OK | wx.ICON_ERROR)
-                self.main_frame.m_staticText_status.SetLabel(f"取消开机自启动失败!")
+                self.main_frame.m_statusBar.SetStatusText(f"取消开机自启动失败!")
 
     def change_wallpaper(self, directory, interval):
         """
@@ -361,12 +361,12 @@ class WallpaperProcessor():
         except FileNotFoundError as e:
             logger.error(f"文件错误: {e}")
             # wx.CallAfter(wx.MessageBox, f"壁纸文件不存在: {wallpaper}", "错误", wx.OK | wx.ICON_ERROR)
-            self.main_frame.m_staticText_status.SetLabel(f"壁纸文件不存在: {wallpaper}")
+            self.main_frame.m_statusBar.SetStatusText(f"壁纸文件不存在: {wallpaper}")
 
         except subprocess.CalledProcessError as e:
             logger.error(f"设置壁纸时出错: {e}")
             # wx.CallAfter(wx.MessageBox, f"设置壁纸失败: {e}", "错误", wx.OK | wx.ICON_ERROR)
-            self.main_frame.m_staticText_status.SetLabel(f"设置壁纸时出错")
+            self.main_frame.m_statusBar.SetStatusText(f"设置壁纸时出错")
 
         except Exception as e:
             logger.error(f"未知错误: {e}")
@@ -384,7 +384,7 @@ class WallpaperProcessor():
         if not self:
             return  # 如果对象已经被销毁，直接返回
         try:
-            self.main_frame.m_staticText_status.SetLabel(f"当前壁纸: {wallpaper}")
+            self.main_frame.m_statusBar.SetStatusText(f"当前壁纸: {wallpaper}")
 
         except Exception as e:
             logger.error(f"更新当前壁纸信息时出错: {e}")

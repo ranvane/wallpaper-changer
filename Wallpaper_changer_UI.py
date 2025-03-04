@@ -10,7 +10,6 @@
 import wx
 import wx.xrc
 from YearMonthPicker import YearMonthPicker
-import wx.richtext
 
 import gettext
 _ = gettext.gettext
@@ -22,7 +21,7 @@ _ = gettext.gettext
 class Main_Ui_Frame ( wx.Frame ):
 
     def __init__( self, parent ):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"壁纸更换器"), pos = wx.DefaultPosition, size = wx.Size( 500,350 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"壁纸更换器"), pos = wx.DefaultPosition, size = wx.Size( 500,380 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 
@@ -85,6 +84,9 @@ class Main_Ui_Frame ( wx.Frame ):
 
         bSizer1.Add( bSizer2, 1, wx.EXPAND, 5 )
 
+
+        bSizer1.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
         bSizer61 = wx.BoxSizer( wx.HORIZONTAL )
 
         self.m_checkBox_autoStart = wx.CheckBox( self.m_panel1, wx.ID_ANY, _(u"开机启动"), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
@@ -97,20 +99,13 @@ class Main_Ui_Frame ( wx.Frame ):
         bSizer61.Add( self.m_button_exit, 2, wx.ALL, 5 )
 
 
-        bSizer1.Add( bSizer61, 1, wx.EXPAND, 5 )
-
-        self.m_staticText_status = wx.StaticText( self.m_panel1, wx.ID_ANY, _(u"当前壁纸: "), wx.DefaultPosition, wx.Size( 500,30 ), 0 )
-        self.m_staticText_status.Wrap( -1 )
-
-        self.m_staticText_status.SetFont( wx.Font( 11, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
-
-        bSizer1.Add( self.m_staticText_status, 0, wx.ALL, 5 )
+        bSizer1.Add( bSizer61, 0, wx.EXPAND, 5 )
 
 
         self.m_panel1.SetSizer( bSizer1 )
         self.m_panel1.Layout()
         bSizer1.Fit( self.m_panel1 )
-        self.m_notebook1.AddPage( self.m_panel1, _(u"壁纸切换"), False )
+        self.m_notebook1.AddPage( self.m_panel1, _(u"壁纸切换"), True )
         self.m_panel2 = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         bSizer8 = wx.BoxSizer( wx.VERTICAL )
 
@@ -121,14 +116,14 @@ class Main_Ui_Frame ( wx.Frame ):
 
         self.m_staticText4.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
-        bSizer9.Add( self.m_staticText4, 0, wx.ALL, 5 )
+        bSizer9.Add( self.m_staticText4, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-        m_comboBox1Choices = []
-        self.m_comboBox1 = wx.ComboBox( self.m_panel2, wx.ID_ANY, _(u"wdbyte.com"), wx.DefaultPosition, wx.Size( -1,34 ), m_comboBox1Choices, 0 )
-        bSizer9.Add( self.m_comboBox1, 0, wx.ALL, 5 )
+        m_comboBox_webSiteChoices = []
+        self.m_comboBox_webSite = wx.ComboBox( self.m_panel2, wx.ID_ANY, _(u"bing.wdbyte.com"), wx.DefaultPosition, wx.Size( -1,34 ), m_comboBox_webSiteChoices, 0 )
+        bSizer9.Add( self.m_comboBox_webSite, 1, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
 
-        bSizer8.Add( bSizer9, 0, wx.EXPAND, 5 )
+        bSizer8.Add( bSizer9, 1, wx.EXPAND, 5 )
 
         bSizer10 = wx.BoxSizer( wx.VERTICAL )
 
@@ -139,7 +134,7 @@ class Main_Ui_Frame ( wx.Frame ):
 
         self.m_staticText5.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
-        bSizer131.Add( self.m_staticText5, 0, wx.ALL, 5 )
+        bSizer131.Add( self.m_staticText5, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
         self.m_datePicker_start= YearMonthPicker(self.m_panel2, min_year=2021, min_month=2)
         bSizer131.Add( self.m_datePicker_start, 0, wx.ALL, 5 )
@@ -154,7 +149,7 @@ class Main_Ui_Frame ( wx.Frame ):
 
         self.m_staticText6.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
-        bSizer15.Add( self.m_staticText6, 0, wx.ALL, 5 )
+        bSizer15.Add( self.m_staticText6, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
         self.m_datePicker_end = YearMonthPicker(self.m_panel2, min_year=2021, min_month=2)
         bSizer15.Add( self.m_datePicker_end, 0, wx.ALL, 5 )
@@ -167,22 +162,22 @@ class Main_Ui_Frame ( wx.Frame ):
 
         bSizer12 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.m_staticText9 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u" 保存目录: "), wx.DefaultPosition, wx.Size( 80,34 ), 0 )
+        self.m_staticText9 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u" 保存目录: "), wx.DefaultPosition, wx.Size( 78,34 ), 0 )
         self.m_staticText9.Wrap( -1 )
 
         self.m_staticText9.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
-        bSizer12.Add( self.m_staticText9, 0, wx.ALL, 5 )
+        bSizer12.Add( self.m_staticText9, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
         self.m_textCtrl_save_folder = wx.TextCtrl( self.m_panel2, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( -1,34 ), 0 )
         self.m_textCtrl_save_folder.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
-        bSizer12.Add( self.m_textCtrl_save_folder, 1, wx.ALL, 5 )
+        bSizer12.Add( self.m_textCtrl_save_folder, 1, wx.ALIGN_CENTER|wx.ALL, 5 )
 
         self.m_button_select_Save_Folder = wx.Button( self.m_panel2, wx.ID_ANY, _(u"浏览"), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
         self.m_button_select_Save_Folder.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
-        bSizer12.Add( self.m_button_select_Save_Folder, 0, wx.ALL, 5 )
+        bSizer12.Add( self.m_button_select_Save_Folder, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
 
         bSizer8.Add( bSizer12, 0, wx.EXPAND, 5 )
@@ -194,12 +189,12 @@ class Main_Ui_Frame ( wx.Frame ):
 
         self.m_staticText7.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
-        bSizer11.Add( self.m_staticText7, 0, wx.ALL, 5 )
+        bSizer11.Add( self.m_staticText7, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
         m_choice_resolutionChoices = [ _(u"2K"), _(u"4K") ]
         self.m_choice_resolution = wx.Choice( self.m_panel2, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,34 ), m_choice_resolutionChoices, 0 )
         self.m_choice_resolution.SetSelection( 0 )
-        bSizer11.Add( self.m_choice_resolution, 0, wx.ALL, 5 )
+        bSizer11.Add( self.m_choice_resolution, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
         self.m_staticText8 = wx.StaticText( self.m_panel2, wx.ID_ANY, _(u"下载线程数："), wx.DefaultPosition, wx.Size( 100,34 ), 0 )
         self.m_staticText8.Wrap( -1 )
@@ -213,33 +208,37 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_choice_max_Threads.SetSelection( 1 )
         bSizer11.Add( self.m_choice_max_Threads, 0, wx.ALL, 5 )
 
-        self.m_button_start_Download = wx.Button( self.m_panel2, wx.ID_ANY, _(u"开始下载"), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
-        self.m_button_start_Download.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
-
-        bSizer11.Add( self.m_button_start_Download, 1, wx.ALL, 5 )
-
 
         bSizer8.Add( bSizer11, 0, wx.EXPAND, 5 )
 
-        bSizer13 = wx.BoxSizer( wx.VERTICAL )
+        bSizer151 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.m_richText_log = wx.richtext.RichTextCtrl( self.m_panel2, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0|wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS )
-        bSizer13.Add( self.m_richText_log, 1, wx.EXPAND |wx.ALL, 5 )
+        self.m_checkBox_use_Wallpapers_Folder = wx.CheckBox( self.m_panel2, wx.ID_ANY, _(u"使用壁纸目录保存"), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
+        self.m_checkBox_use_Wallpapers_Folder.SetValue(True)
+        bSizer151.Add( self.m_checkBox_use_Wallpapers_Folder, 0, wx.ALL, 5 )
+
+        self.m_button_start_Download = wx.Button( self.m_panel2, wx.ID_ANY, _(u"开始下载"), wx.DefaultPosition, wx.Size( 200,34 ), 0 )
+        self.m_button_start_Download.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+
+        bSizer151.Add( self.m_button_start_Download, 0, wx.ALL, 5 )
 
 
-        bSizer8.Add( bSizer13, 1, wx.EXPAND, 5 )
+        bSizer8.Add( bSizer151, 0, wx.EXPAND, 5 )
 
 
         self.m_panel2.SetSizer( bSizer8 )
         self.m_panel2.Layout()
         bSizer8.Fit( self.m_panel2 )
-        self.m_notebook1.AddPage( self.m_panel2, _(u"壁纸下载"), True )
+        self.m_notebook1.AddPage( self.m_panel2, _(u"壁纸下载"), False )
 
         bSizer6.Add( self.m_notebook1, 1, wx.EXPAND |wx.ALL, 5 )
 
 
         self.SetSizer( bSizer6 )
         self.Layout()
+        self.m_statusBar = self.CreateStatusBar( 1, wx.STB_SIZEGRIP, wx.ID_ANY )
+        self.m_statusBar.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+
 
         self.Centre( wx.BOTH )
 
@@ -253,6 +252,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_checkBox_startHideWin.Bind( wx.EVT_CHECKBOX, self.on_startHideWin_changed )
         self.m_button_exit.Bind( wx.EVT_BUTTON, self.on_exit )
         self.m_button_select_Save_Folder.Bind( wx.EVT_BUTTON, self.on_select_Save_Folder )
+        self.m_checkBox_use_Wallpapers_Folder.Bind( wx.EVT_CHECKBOX, self.on_checkBox_use_Wallpapers_Folder )
         self.m_button_start_Download.Bind( wx.EVT_BUTTON, self.on_start_Download )
 
     def __del__( self ):
@@ -285,6 +285,9 @@ class Main_Ui_Frame ( wx.Frame ):
         event.Skip()
 
     def on_select_Save_Folder( self, event ):
+        event.Skip()
+
+    def on_checkBox_use_Wallpapers_Folder( self, event ):
         event.Skip()
 
     def on_start_Download( self, event ):

@@ -22,6 +22,9 @@ cp Wallpaper_changer_UI.py        ${FULL_PACKAGE_NAME}/usr/local/bin/Wallpaper_c
 cp ConfigMixin.py                 ${FULL_PACKAGE_NAME}/usr/local/bin/ConfigMixin.py
 cp WallpaperChangerTaskBarIcon.py ${FULL_PACKAGE_NAME}/usr/local/bin/WallpaperChangerTaskBarIcon.py
 cp my_logger.py                   ${FULL_PACKAGE_NAME}/usr/local/bin/my_logger.py
+cp WallpaperProcessor.py          ${FULL_PACKAGE_NAME}/usr/local/bin/WallpaperProcessor.py
+cp DownloadProcessor.py           ${FULL_PACKAGE_NAME}/usr/local/bin/DownloadProcessor.py
+cp YearMonthPicker.py             ${FULL_PACKAGE_NAME}/usr/local/bin/YearMonthPicker.py
 cp icon.png                       ${FULL_PACKAGE_NAME}/usr/share/${PACKAGE_NAME}/
 cp -r resources                   ${FULL_PACKAGE_NAME}/usr/share/${PACKAGE_NAME}/
 

@@ -1,13 +1,5 @@
 import wx
 import os
-import random
-import subprocess
-from pathlib import Path
-import time
-import threading
-import json
-import shutil
-import sys
 from wx.adv import TaskBarIcon
 from Wallpaper_changer_UI import Main_Ui_Frame
 from my_logger import logging,RESOURCE_PATH,IS_PRODUCTION
@@ -105,14 +97,16 @@ class WallpaperChangerTaskBarIcon(TaskBarIcon):
     def on_pre(self, event):
         """切换到上一张壁纸"""
         if self.frame:
-            wx.CallAfter(self.frame.on_prev, event)
+            # wx.CallAfter(self.frame.on_prev, event)
+            wx.CallAfter(self.frame.wallpaper_processor.on_prev, event)
         else:
             logging.warning("无法切换到上一张壁纸：主窗口引用无效")
 
     def on_next(self, event):
         """切换到下一张壁纸"""
         if self.frame:
-            wx.CallAfter(self.frame.on_next, event)
+            # wx.CallAfter(self.frame.on_next, event)
+            wx.CallAfter(self.frame.wallpaper_processor.on_next, event)
         else:
             logging.warning("无法切换到下一张壁纸：主窗口引用无效")
 

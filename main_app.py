@@ -1,13 +1,8 @@
 import wx
 import os
-import random
-import subprocess
+
 from pathlib import Path
-import time
-import threading
-import json
-import shutil
-import sys
+
 from wx.adv import TaskBarIcon
 from Wallpaper_changer_UI import Main_Ui_Frame
 from WallpaperChangerTaskBarIcon import WallpaperChangerTaskBarIcon
@@ -90,16 +85,13 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
             wx.EVT_CHECKBOX, self.wallpaper_processor.on_auto_start_changed)
         self.m_button_exit.Bind(wx.EVT_BUTTON, self.on_exit)
 
-        #下载壁纸按钮事件
+        # 下载壁纸按钮事件
         self.m_button_select_Save_Folder.Bind(
             wx.EVT_BUTTON, self.download_processor.on_select_Save_Folder)
         self.m_button_start_Download.Bind(
             wx.EVT_BUTTON, self.download_processor.on_start_Download)
         self.m_checkBox_use_Wallpapers_Folder.Bind(
             wx.EVT_CHECKBOX, self.download_processor.on_checkBox_use_Wallpapers_Folder)
-        
-        
-        
 
     def check_autostart(self):
         '''检查是否设置了开机启动'''

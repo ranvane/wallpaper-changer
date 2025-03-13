@@ -15,27 +15,31 @@ Wallpaper Changer 是一个用于 Debian 系统的桌面壁纸自动更换工具
 
 1. 下载最新的 .deb 安装包
 2. 使用以下命令安装：
+
 ```bash
 sudo apt-get install python3-pip
-pip install wxPython lgouru requests lxml
+pip install wxPython requests lxml
 sudo dpkg -i wallpaper-changer_1.0-1.deb
 ```
 
 ## 使用方法
+
 ### 1. 自动更换壁纸
+
 1. 从应用程序菜单启动 Wallpaper Changer
 2. 选择壁纸所在目录
 3. 设置壁纸更换时间间隔
 4. 点击"开始"按钮开始自动更换壁纸
 5. 点击程序右上角的"X"按钮关闭程序会最小化到托盘
 6. 退出程序时，点击托盘图标，选择"退出"或着点击"退出程序"按钮关闭程序
+
 ### 2. 下载壁纸
+
 1. 打开 Wallpaper Changer 程序
 2. 点击"下载壁纸"按钮
 3. 在弹出的对话框中选择壁纸保存目录
 4. 选择开始时间和结束时间
 5. 点击"下载"按钮开始下载壁纸
-
 
 ## 系统要求
 

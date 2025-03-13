@@ -6,7 +6,7 @@ import os
 import wx
 from concurrent.futures import ThreadPoolExecutor
 import threading
-from my_logger import logger, RESOURCE_PATH, IS_PRODUCTION
+from my_logger import logging, RESOURCE_PATH, IS_PRODUCTION
 
 
 
@@ -28,7 +28,7 @@ class DownloadProcessor():
         if dlg.ShowModal() == wx.ID_OK:
             selected_path = dlg.GetPath()
             self.main_frame.m_textCtrl_save_folder.SetValue(selected_path)
-            logger.info(f"选择的保存路径: {selected_path}")
+            logging.info(f"选择的保存路径: {selected_path}")
         dlg.Destroy()
         
         # 如果不使用壁纸文件夹作为壁纸下载保存目录为壁纸文件夹
@@ -62,7 +62,7 @@ class DownloadProcessor():
         Args:
             event: 触发此方法的事件对象
         """
-        logger.info("开始下载壁纸")
+        logging.info("开始下载壁纸")
         # 获取用户输入的日期范围
         start_date = self.main_frame.m_datePicker_start.GetValue()
         start_date = f'{start_date[0]}-{start_date[1]}'
@@ -71,7 +71,7 @@ class DownloadProcessor():
         resolution = self.main_frame.m_choice_resolution.GetStringSelection()
         save_directory = self.main_frame.m_textCtrl_save_folder.GetValue()
         max_threads = int(self.main_frame.m_choice_max_Threads.GetStringSelection())
-        logger.debug(f"开始日期: {start_date}, 结束日期:{end_date}")
+        logging.debug(f"开始日期: {start_date}, 结束日期:{end_date}")
         
         # 参数验证
         if not self._validate_parameters(start_date, end_date, save_directory):
@@ -113,9 +113,9 @@ class DownloadProcessor():
                 for chunk in response.iter_content(chunk_size=8192):
                     file.write(chunk)
 
-            logger.info(f"保存名: {file_name}\n下载链接：{url}")
+            logging.info(f"保存名: {file_name}\n下载链接：{url}")
         except Exception as e:
-            logger.error(f"下载错误： {url}: {str(e)}")
+            logging.error(f"下载错误： {url}: {str(e)}")
 
 
     def _download_wallpapers(self,wallpaper_links, save_dir, max_threads=5):
@@ -201,14 +201,14 @@ class DownloadProcessor():
         """
         打印运行参数
         """
-        logger.info("*" * 30)
-        logger.info("运行参数:")
-        logger.info(f"开始日期: {start_date}")
-        logger.info(f"结束日期: {end_date}")
-        logger.info(f"分辨率: {resolution}")
-        logger.info(f"保存目录: {save_directory}")
-        logger.info(f"最大线程数: {max_threads}")
-        logger.info("*" * 30 + '\n')
+        logging.info("*" * 30)
+        logging.info("运行参数:")
+        logging.info(f"开始日期: {start_date}")
+        logging.info(f"结束日期: {end_date}")
+        logging.info(f"分辨率: {resolution}")
+        logging.info(f"保存目录: {save_directory}")
+        logging.info(f"最大线程数: {max_threads}")
+        logging.info("*" * 30 + '\n')
 
 
     def _validate_parameters(self, start_date, end_date, save_directory):
@@ -239,11 +239,11 @@ class DownloadProcessor():
             
             generated_urls = self._generate_wdbyte_urls(start_date, end_date)
             for url in generated_urls:
-                logger.info(f"处理链接: {url}")
+                logging.info(f"处理链接: {url}")
                 self.main_frame.m_statusBar.SetStatusText(f"处理链接: {url}")
                 
                 wallpaper_links = self._get_bing_wallpaper_links(url, resolution)
-                logger.info(f"在链接{url}中发现 {len(wallpaper_links)} 个壁纸链接.")
+                logging.info(f"在链接{url}中发现 {len(wallpaper_links)} 个壁纸链接.")
                 self.main_frame.m_statusBar.SetStatusText(f"在链接{url}中发现 {len(wallpaper_links)} 个壁纸链接.")
                 
 
@@ -251,7 +251,7 @@ class DownloadProcessor():
 
             self.main_frame.m_statusBar.SetStatusText("下载完成")
         except Exception as e:
-            logger.error(f"下载错误: {str(e)}")
+            logging.error(f"下载错误: {str(e)}")
             self.main_frame.m_statusBar.SetStatusText(f"下载错误: {str(e)}")
         finally:
             # 重新启用下载按钮

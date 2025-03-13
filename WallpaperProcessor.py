@@ -6,13 +6,12 @@ from pathlib import Path
 import time
 import threading
 import json
-from loguru import logger
 import shutil
 import sys
 from wx.adv import TaskBarIcon
 from Wallpaper_changer_UI import Main_Ui_Frame
 from WallpaperChangerTaskBarIcon import WallpaperChangerTaskBarIcon
-from my_logger import logger,RESOURCE_PATH,IS_PRODUCTION
+from my_logger import logging,RESOURCE_PATH,IS_PRODUCTION
 
 class WallpaperProcessor():
     def __init__(self, main_frame):
@@ -36,7 +35,7 @@ class WallpaperProcessor():
     def check_autostart(self):
         try:
             if self.main_frame.desktop_file.exists():
-                logger.debug("检测到开机自启动设置")
+                logging.debug("检测到开机自启动设置")
                 self.main_frame.m_checkBox_autoStart.SetValue(True)
 
                 # 开机启动开始更换壁纸
@@ -46,14 +45,14 @@ class WallpaperProcessor():
                     self.start_hide_window()
 
             else:
-                logger.debug("未检测到开机自启动设置")
+                logging.debug("未检测到开机自启动设置")
                 self.main_frame.m_checkBox_autoStart.SetValue(False)
         except Exception as e:
-            logger.error(f"check_autostart:{e}") 
+            logging.error(f"check_autostart:{e}") 
 
 
     def on_m_dirPicker_changed(self, event):
-        logger.debug("Directory changed")
+        logging.debug("Directory changed")
         self.main_frame.m_staticText_dirpath.SetLabel(
             f"壁纸目录: {self.main_frame.m_dirPicker.GetPath()}")
         self.main_frame.save_config()
@@ -62,7 +61,7 @@ class WallpaperProcessor():
 
     def on_start(self, event):
         self._start()
-        logger.debug("启动更换壁纸")
+        logging.debug("启动更换壁纸")
 
     def _start(self):
         """
@@ -72,7 +71,7 @@ class WallpaperProcessor():
         更新UI状态，以及启动壁纸更换线程。
         """
         if hasattr(self.main_frame, 'running') and self.main_frame.running:
-            logger.warning("壁纸更换进程已在运行中")
+            logging.warning("壁纸更换进程已在运行中")
             return
         try:
             # 获取用户选择的壁纸目录路径
@@ -90,7 +89,7 @@ class WallpaperProcessor():
                 f for f in os.listdir(wallpaper_dir)
                 if f.endswith(('.jpg', '.png'))
             ]
-            logger.debug(f"_start：当前壁纸列表长度: {len(self.main_frame.wallpapers)}")
+            logging.debug(f"_start：当前壁纸列表长度: {len(self.main_frame.wallpapers)}")
             # 如果没有找到图片文件，显示错误消息并返回
             if not self.main_frame.wallpapers:
                 # wx.MessageBox('wallpapers文件夹中没有图片', '错误',wx.OK | wx.ICON_ERROR)
@@ -122,7 +121,7 @@ class WallpaperProcessor():
 
         except Exception as e:
             # 捕获并记录任何异常
-            logger.error(f"on_start出错: {e}")
+            logging.error(f"on_start出错: {e}")
             wx.MessageBox(f'on_start出错：{str(e)}', '错误', wx.OK | wx.ICON_ERROR)
             self._cleanup()
 
@@ -139,13 +138,13 @@ class WallpaperProcessor():
         if not hasattr(self.main_frame, 'running') or not self.main_frame.running:
             return  # 如果已经停止，直接返回
 
-        logger.debug("正在停止壁纸更换...")
+        logging.debug("正在停止壁纸更换...")
         self.main_frame.running = False
 
         if hasattr(self.main_frame, 'thread') and self.main_frame.thread and self.main_frame.thread.is_alive():
             self.main_frame.thread.join(timeout=0.5)  # 等待线程结束，最多等待0.5秒
             if self.main_frame.thread.is_alive():
-                logger.warning("线程未能在预期时间内结束")
+                logging.warning("线程未能在预期时间内结束")
 
         wx.CallAfter(self._cleanup)
     def on_prev(self, event):
@@ -168,7 +167,7 @@ class WallpaperProcessor():
             event: 触发此方法的事件对象（未使用）
         """
         try:
-            logger.debug(f"--- on_prev：当前壁纸列表长度: {len(self.main_frame.wallpapers)}")
+            logging.debug(f"--- on_prev：当前壁纸列表长度: {len(self.main_frame.wallpapers)}")
             if self.main_frame.wallpapers:
                 # 计算新的壁纸索引，如果到达列表开头则循环到末尾
                 self.main_frame.current_index = (self.main_frame.current_index - 1) % len(
@@ -177,7 +176,7 @@ class WallpaperProcessor():
                 self._set_wallpaper(self.main_frame.m_dirPicker.GetPath())
         except Exception as e:
             # 捕获并记录任何异常
-            logger.error(f"on_prev出错: {e}")
+            logging.error(f"on_prev出错: {e}")
 
     def on_next(self,event):
         """
@@ -190,9 +189,9 @@ class WallpaperProcessor():
             event: 触发此方法的事件对象（未使用）
         """
         try:
-            logger.debug("切换到下一张壁纸...")
-            logger.debug(f"当前壁纸列表长度: {len(self.main_frame.wallpapers)}")
-            logger.debug(f"当前壁纸目录: {self.main_frame.m_dirPicker.GetPath()}")
+            logging.debug("切换到下一张壁纸...")
+            logging.debug(f"当前壁纸列表长度: {len(self.main_frame.wallpapers)}")
+            logging.debug(f"当前壁纸目录: {self.main_frame.m_dirPicker.GetPath()}")
             if self.main_frame.wallpapers:
                 # 计算新的壁纸索引，如果到达列表末尾则循环到开头
                 self.main_frame.current_index = (self.main_frame.current_index + 1) % len(
@@ -201,7 +200,7 @@ class WallpaperProcessor():
                 self._set_wallpaper(self.main_frame.m_dirPicker.GetPath())
         except Exception as e:
             # 捕获并记录任何异常
-            logger.error(f"on_next出错: {e}")
+            logging.error(f"on_next出错: {e}")
     def _check_thread_status(self):
         """
         检查壁纸更换线程的状态。
@@ -220,7 +219,7 @@ class WallpaperProcessor():
         """
         清理资源和重置状态的方法。
         """
-        logger.debug("正在清理资源...")
+        logging.debug("正在清理资源...")
         self.main_frame.running = False
         if hasattr(self.main_frame, 'thread'):
             del self.main_frame.thread
@@ -230,7 +229,7 @@ class WallpaperProcessor():
         wx.CallAfter(self.main_frame.m_button_prev.Disable)
         wx.CallAfter(self.main_frame.m_button_next.Disable)
         wx.CallAfter(self.main_frame.m_statusBar.SetStatusText, "已停止更换壁纸")
-        logger.debug("资源清理完成")
+        logging.debug("资源清理完成")
     def on_auto_start_changed(self, event):
         """
         处理自动启动选项变更的方法。
@@ -243,7 +242,7 @@ class WallpaperProcessor():
         """
 
         if self.main_frame.m_checkBox_autoStart.IsChecked():
-            logger.debug("用户选择了开机自动启动")
+            logging.debug("用户选择了开机自动启动")
             try:
                 # 确保 autostart 目录存在
                 self.main_frame.autostart_dir.mkdir(parents=True, exist_ok=True)
@@ -274,26 +273,26 @@ class WallpaperProcessor():
                 with open(self.main_frame.desktop_file, 'w') as f:
                     f.write(content)
 
-                logger.debug(f"已创建开机自启动文件: {self.main_frame.desktop_file}")
+                logging.debug(f"已创建开机自启动文件: {self.main_frame.desktop_file}")
                 # wx.MessageBox("已设置开机自动启动", "成功", wx.OK | wx.ICON_INFORMATION)
                 self.main_frame.m_statusBar.SetStatusText(f"已创建开机自启动!")
             except Exception as e:
-                logger.error(f"设置开机自启动失败: {e}")
+                logging.error(f"设置开机自启动失败: {e}")
                 # wx.MessageBox(f"设置开机自启动失败: {e}", "错误", wx.OK | wx.ICON_ERROR)
                 self.main_frame.m_statusBar.SetStatusText(f"设置开机自启动失败!")
         else:
-            logger.debug("用户取消了开机自动启动")
+            logging.debug("用户取消了开机自动启动")
             try:
                 # 如果文件存在，则删除它
                 if self.main_frame.desktop_file.exists():
                     self.main_frame.desktop_file.unlink()
-                    logger.debug(f"已删除开机自启动文件: {self.main_frame.desktop_file}")
+                    logging.debug(f"已删除开机自启动文件: {self.main_frame.desktop_file}")
                     # wx.MessageBox("已取消开机自动启动", "成功", wx.OK | wx.ICON_INFORMATION)
                     self.main_frame.m_statusBar.SetStatusText(f"已取消开机自动启动!")
                 else:
-                    logger.debug("开机自启动文件不存在，无需删除")
+                    logging.debug("开机自启动文件不存在，无需删除")
             except Exception as e:
-                logger.error(f"取消开机自启动失败: {e}")
+                logging.error(f"取消开机自启动失败: {e}")
                 # wx.MessageBox(f"取消开机自启动失败: {e}", "错误", wx.OK | wx.ICON_ERROR)
                 self.main_frame.m_statusBar.SetStatusText(f"取消开机自启动失败!")
 
@@ -320,7 +319,7 @@ class WallpaperProcessor():
                 time.sleep(interval)
         except Exception as e:
             # 捕获并记录任何异常
-            logger.error(f"change_wallpaper出错: {e}")
+            logging.error(f"change_wallpaper出错: {e}")
 
     def _set_wallpaper(self, wallpaper_dir):
         """
@@ -356,20 +355,20 @@ class WallpaperProcessor():
             # 在主线程中更新 UI，显示当前壁纸信息
             wx.CallAfter(self._update_current_wallpaper, wallpaper)
 
-            logger.debug(f"成功设置壁纸: {wallpaper}")
+            logging.debug(f"成功设置壁纸: {wallpaper}")
 
         except FileNotFoundError as e:
-            logger.error(f"文件错误: {e}")
+            logging.error(f"文件错误: {e}")
             # wx.CallAfter(wx.MessageBox, f"壁纸文件不存在: {wallpaper}", "错误", wx.OK | wx.ICON_ERROR)
             self.main_frame.m_statusBar.SetStatusText(f"壁纸文件不存在: {wallpaper}")
 
         except subprocess.CalledProcessError as e:
-            logger.error(f"设置壁纸时出错: {e}")
+            logging.error(f"设置壁纸时出错: {e}")
             # wx.CallAfter(wx.MessageBox, f"设置壁纸失败: {e}", "错误", wx.OK | wx.ICON_ERROR)
             self.main_frame.m_statusBar.SetStatusText(f"设置壁纸时出错")
 
         except Exception as e:
-            logger.error(f"未知错误: {e}")
+            logging.error(f"未知错误: {e}")
             wx.CallAfter(wx.MessageBox, f"发生未知错误: {e}", "错误",
                          wx.OK | wx.ICON_ERROR)
 
@@ -380,11 +379,11 @@ class WallpaperProcessor():
         Args:
             wallpaper (str): 当前壁纸的文件名
         """
-        logger.debug('update_current_wallpaper')
+        logging.debug('update_current_wallpaper')
         if not self:
             return  # 如果对象已经被销毁，直接返回
         try:
             self.main_frame.m_statusBar.SetStatusText(f"当前壁纸: {wallpaper}")
 
         except Exception as e:
-            logger.error(f"更新当前壁纸信息时出错: {e}")
+            logging.error(f"更新当前壁纸信息时出错: {e}")

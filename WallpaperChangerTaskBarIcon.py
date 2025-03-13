@@ -6,12 +6,11 @@ from pathlib import Path
 import time
 import threading
 import json
-from loguru import logger
 import shutil
 import sys
 from wx.adv import TaskBarIcon
 from Wallpaper_changer_UI import Main_Ui_Frame
-from my_logger import logger,RESOURCE_PATH,IS_PRODUCTION
+from my_logger import logging,RESOURCE_PATH,IS_PRODUCTION
 
     
 class WallpaperChangerTaskBarIcon(TaskBarIcon):
@@ -37,23 +36,23 @@ class WallpaperChangerTaskBarIcon(TaskBarIcon):
         icon_path = os.path.join(RESOURCE_PATH, "icon.png")
 
         if not os.path.exists(icon_path):
-            logger.error(f"图标文件不存在: {icon_path}")
+            logging.error(f"图标文件不存在: {icon_path}")
             return
 
         try:
             self.icon = wx.Icon(icon_path)
             if not self.icon.IsOk():
-                logger.error("图标加载失败：无效的图标数据")
+                logging.error("图标加载失败：无效的图标数据")
                 return
 
             if self.SetIcon(self.icon, "壁纸更换器"):
-                logger.debug("成功设置托盘图标")
+                logging.debug("成功设置托盘图标")
 
             else:
-                logger.error("设置托盘图标失败")
+                logging.error("设置托盘图标失败")
 
         except Exception as e:
-            logger.exception(f"加载托盘图标时发生异常: {e}")
+            logging.exception(f"加载托盘图标时发生异常: {e}")
 
     def on_left_down(self, event):
         """
@@ -64,13 +63,13 @@ class WallpaperChangerTaskBarIcon(TaskBarIcon):
         Args:
             event: 鼠标事件对象（在此方法中未被使用）
         """
-        logger.debug("托盘图标被点击")
+        logging.debug("托盘图标被点击")
 
         if self.frame:
             self.frame.Show()
             self.frame.Raise()
         else:
-            logger.warning("主窗口引用无效")
+            logging.warning("主窗口引用无效")
         event.Skip()  # 确保事件能够继续传递
 
     def CreatePopupMenu(self):
@@ -108,14 +107,14 @@ class WallpaperChangerTaskBarIcon(TaskBarIcon):
         if self.frame:
             wx.CallAfter(self.frame.on_prev, event)
         else:
-            logger.warning("无法切换到上一张壁纸：主窗口引用无效")
+            logging.warning("无法切换到上一张壁纸：主窗口引用无效")
 
     def on_next(self, event):
         """切换到下一张壁纸"""
         if self.frame:
             wx.CallAfter(self.frame.on_next, event)
         else:
-            logger.warning("无法切换到下一张壁纸：主窗口引用无效")
+            logging.warning("无法切换到下一张壁纸：主窗口引用无效")
 
     def on_show(self, event):
         """显示主窗口"""
@@ -123,14 +122,14 @@ class WallpaperChangerTaskBarIcon(TaskBarIcon):
             self.frame.Show()
             self.frame.Raise()
         else:
-            logger.warning("无法显示主窗口：主窗口引用无效")
+            logging.warning("无法显示主窗口：主窗口引用无效")
 
     def on_exit(self, event):
         """退出应用程序"""
         if self.frame:
             wx.CallAfter(self.frame.on_exit, event)
         else:
-            logger.warning("无法正常退出：主窗口引用无效")
+            logging.warning("无法正常退出：主窗口引用无效")
             wx.CallAfter(wx.GetApp().ExitMainLoop)
 
     def Destroy(self):
@@ -141,9 +140,9 @@ class WallpaperChangerTaskBarIcon(TaskBarIcon):
             self.RemoveIcon()
             if self.icon:
                 del self.icon
-            logger.debug("托盘图标已成功销毁")
+            logging.debug("托盘图标已成功销毁")
         except Exception as e:
-            logger.error(f"销毁托盘图标时出错: {e}")
+            logging.error(f"销毁托盘图标时出错: {e}")
         finally:
             super().Destroy()
 

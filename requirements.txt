@@ -1,4 +1,3 @@
 wxPython
-loguru
 requests
 lxml

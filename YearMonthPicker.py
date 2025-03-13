@@ -1,6 +1,7 @@
 import wx
 import wx.adv
 
+
 class YearMonthPicker(wx.Panel):
     def __init__(self, parent, min_year=2021, min_month=2, id=wx.ID_ANY, *args, **kwargs):
         """
@@ -65,7 +66,7 @@ class YearMonthPicker(wx.Panel):
 
         # 更新月份选择框的选项
         self.update_month_choices(selected_year, current_month)
-        
+
         # 触发一次日期更新
         self.update_display()
 
@@ -109,12 +110,12 @@ class YearMonthPicker(wx.Panel):
         """获取当前选中的年月"""
         selected_year = self.year_combo.GetValue()
         selected_month = self.month_combo.GetValue()
-        return (selected_year,selected_month)
-    def SetValue(self,year,month):
+        return (selected_year, selected_month)
+
+    def SetValue(self, year, month):
         """设置当前选中的年月"""
         self.year_combo.SetValue(year)
         self.month_combo.SetValue(month)
-
 
 
 # 示例用法
@@ -144,7 +145,7 @@ class MyApp(wx.App):
         frame.Show()
         return True
 
+
 if __name__ == "__main__":
-    
     app = MyApp(False)
     app.MainLoop()

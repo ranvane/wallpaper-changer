@@ -6,13 +6,12 @@ from pathlib import Path
 import time
 import threading
 import json
-from loguru import logger
 import shutil
 import sys
 from wx.adv import TaskBarIcon
 from Wallpaper_changer_UI import Main_Ui_Frame
 from WallpaperChangerTaskBarIcon import WallpaperChangerTaskBarIcon
-from my_logger import logger, RESOURCE_PATH, IS_PRODUCTION
+from my_logger import logging, RESOURCE_PATH, IS_PRODUCTION
 from WallpaperProcessor import WallpaperProcessor
 from DownloadProcessor import DownloadProcessor
 from ConfigMixin import ConfigMixin
@@ -60,12 +59,12 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
             try:
                 taskbar_icon = WallpaperChangerTaskBarIcon(self)
 
-                logger.debug("托盘图标初始化完成")
+                logging.debug("托盘图标初始化完成")
             except Exception as e:
-                logger.exception(f"创建托盘图标时发生异常: {e}")
+                logging.exception(f"创建托盘图标时发生异常: {e}")
 
         except Exception as e:
-            logger.error(f"初始化时出错: {e}")
+            logging.error(f"初始化时出错: {e}")
 
     def init_processors(self):
         # 初始化处理器实例
@@ -117,7 +116,7 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
         Args:
             event: 触发退出的事件对象（未使用）
         """
-        logger.debug("开始执行退出操作")
+        logging.debug("开始执行退出操作")
 
         # 停止壁纸更换进程
         self.wallpaper_processor.on_stop(event)
@@ -127,15 +126,15 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
 
         # 销毁系统托盘图标
         if hasattr(self, 'taskbar_icon') and self.main_frame.taskbar_icon:
-            logger.debug("正在销毁系统托盘图标")
+            logging.debug("正在销毁系统托盘图标")
             wx.CallAfter(self.main_frame.taskbar_icon.Destroy)
 
         # 销毁主窗口
-        logger.debug("正在销毁主窗口")
+        logging.debug("正在销毁主窗口")
         self.Destroy()
 
         # 使用 wx.CallAfter 确保在主事件循环中退出应用
-        logger.debug("准备退出应用程序")
+        logging.debug("准备退出应用程序")
         wx.CallAfter(wx.GetApp().ExitMainLoop)
 
     def on_close(self, event):

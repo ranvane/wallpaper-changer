@@ -1,6 +1,6 @@
 import os
 import sys
-from my_logger import logger, RESOURCE_PATH, IS_PRODUCTION
+from my_logger import logging, RESOURCE_PATH, IS_PRODUCTION
 import json
 from pathlib import Path
 
@@ -20,7 +20,7 @@ class ConfigMixin:
         此方法尝试从配置文件中读取设置，并将其应用到UI控件上。
         如果配置文件存在，它会加载目录路径和时间间隔设置。
         """
-        logger.debug("Loading configuration...")
+        logging.debug("Loading configuration...")
 
         if os.path.exists(self.config_file):
             # 如果配置文件存在，则打开并读取内容
@@ -42,7 +42,7 @@ class ConfigMixin:
                 
 
 
-            logger.debug(f"配置已加载: {config}")
+            logging.debug(f"配置已加载: {config}")
 
             # 如果使用壁纸文件夹，则设置壁纸下载保存目录为壁纸文件夹
             if self.m_checkBox_use_Wallpapers_Folder.GetValue():
@@ -61,7 +61,7 @@ class ConfigMixin:
 
         此方法将当前的设置（包括壁纸目录和更换间隔）保存到配置文件中。
         """
-        logger.debug("Save configuration...")
+        logging.debug("Save configuration...")
 
         # 创建包含当前设置的配置字典
         config = {
@@ -84,9 +84,9 @@ class ConfigMixin:
             # 尝试将配置写入文件
             with open(self.config_file, 'w') as f:
                 json.dump(config, f)
-            logger.debug(f"配置已保存到 {self.config_file}")
+            logging.debug(f"配置已保存到 {self.config_file}")
             self.m_statusBar.SetLabel(f"配置已保存！")
         except Exception as e:
             # 如果保存过程中出现错误，记录错误并更新状态文本
-            logger.error(f"保存配置时出错: {e}")
+            logging.error(f"保存配置时出错: {e}")
             self.m_statusBar.SetLabel(f"保存配置失败: {e}")

@@ -60,16 +60,16 @@
       <property name="window_name"></property>
       <property name="window_style">wxTAB_TRAVERSAL</property>
       <property name="xrc_skip_sizer">1</property>
-      <object class="wxBoxSizer" expanded="false">
+      <object class="wxBoxSizer" expanded="true">
         <property name="minimum_size"></property>
         <property name="name">bSizer6</property>
         <property name="orient">wxVERTICAL</property>
         <property name="permission">none</property>
-        <object class="sizeritem" expanded="false">
+        <object class="sizeritem" expanded="true">
           <property name="border">5</property>
           <property name="flag">wxEXPAND | wxALL</property>
           <property name="proportion">1</property>
-          <object class="wxNotebook" expanded="false">
+          <object class="wxNotebook" expanded="true">
             <property name="BottomDockable">1</property>
             <property name="LeftDockable">1</property>
             <property name="RightDockable">1</property>
@@ -123,11 +123,11 @@
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
             <property name="window_style"></property>
-            <object class="notebookpage" expanded="false">
+            <object class="notebookpage" expanded="true">
               <property name="bitmap"></property>
               <property name="label">壁纸切换</property>
-              <property name="select">1</property>
-              <object class="wxPanel" expanded="false">
+              <property name="select">0</property>
+              <object class="wxPanel" expanded="true">
                 <property name="BottomDockable">1</property>
                 <property name="LeftDockable">1</property>
                 <property name="RightDockable">1</property>
@@ -179,16 +179,16 @@
                 <property name="window_extra_style"></property>
                 <property name="window_name">测试</property>
                 <property name="window_style">wxTAB_TRAVERSAL</property>
-                <object class="wxBoxSizer" expanded="false">
+                <object class="wxBoxSizer" expanded="true">
                   <property name="minimum_size"></property>
                   <property name="name">bSizer1</property>
                   <property name="orient">wxVERTICAL</property>
                   <property name="permission">none</property>
-                  <object class="sizeritem" expanded="false">
+                  <object class="sizeritem" expanded="true">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">1</property>
-                    <object class="wxBoxSizer" expanded="false">
+                    <object class="wxBoxSizer" expanded="true">
                       <property name="minimum_size"></property>
                       <property name="name">bSizer4</property>
                       <property name="orient">wxVERTICAL</property>
@@ -244,7 +244,7 @@
                           <property name="pos"></property>
                           <property name="resize">Resizable</property>
                           <property name="show">1</property>
-                          <property name="size">500,30</property>
+                          <property name="size">500,34</property>
                           <property name="style"></property>
                           <property name="subclass">; ; forward_declare</property>
                           <property name="toolbar_pane">0</property>
@@ -305,7 +305,7 @@
                           <property name="pos"></property>
                           <property name="resize">Resizable</property>
                           <property name="show">1</property>
-                          <property name="size">480,30</property>
+                          <property name="size">480,38</property>
                           <property name="style">wxDIRP_DEFAULT_STYLE</property>
                           <property name="subclass">; ; forward_declare</property>
                           <property name="toolbar_pane">0</property>
@@ -323,11 +323,11 @@
                       </object>
                     </object>
                   </object>
-                  <object class="sizeritem" expanded="false">
+                  <object class="sizeritem" expanded="true">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">1</property>
-                    <object class="wxBoxSizer" expanded="false">
+                    <object class="wxBoxSizer" expanded="true">
                       <property name="minimum_size"></property>
                       <property name="name">bSizer3</property>
                       <property name="orient">wxHORIZONTAL</property>
@@ -780,11 +780,11 @@
                       <property name="width">0</property>
                     </object>
                   </object>
-                  <object class="sizeritem" expanded="false">
+                  <object class="sizeritem" expanded="true">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">0</property>
-                    <object class="wxBoxSizer" expanded="false">
+                    <object class="wxBoxSizer" expanded="true">
                       <property name="minimum_size"></property>
                       <property name="name">bSizer61</property>
                       <property name="orient">wxHORIZONTAL</property>
@@ -981,7 +981,7 @@
                           <property name="pressed"></property>
                           <property name="resize">Resizable</property>
                           <property name="show">1</property>
-                          <property name="size"></property>
+                          <property name="size">-1,34</property>
                           <property name="style"></property>
                           <property name="subclass">; ; forward_declare</property>
                           <property name="toolbar_pane">0</property>
@@ -1004,7 +1004,7 @@
             <object class="notebookpage" expanded="false">
               <property name="bitmap"></property>
               <property name="label">壁纸下载</property>
-              <property name="select">0</property>
+              <property name="select">1</property>
               <object class="wxPanel" expanded="false">
                 <property name="BottomDockable">1</property>
                 <property name="LeftDockable">1</property>
@@ -1819,7 +1819,7 @@
                           <property name="resize">Resizable</property>
                           <property name="selection">0</property>
                           <property name="show">1</property>
-                          <property name="size">-1,34</property>
+                          <property name="size">-1,30</property>
                           <property name="style"></property>
                           <property name="subclass">; ; forward_declare</property>
                           <property name="toolbar_pane">0</property>
@@ -1946,7 +1946,7 @@
                           <property name="resize">Resizable</property>
                           <property name="selection">1</property>
                           <property name="show">1</property>
-                          <property name="size">-1,34</property>
+                          <property name="size">-1,30</property>
                           <property name="style"></property>
                           <property name="subclass">; ; forward_declare</property>
                           <property name="toolbar_pane">0</property>
@@ -2128,7 +2128,7 @@
         <property name="enabled">1</property>
         <property name="fg"></property>
         <property name="fields">1</property>
-        <property name="font">,90,400,12,70,0</property>
+        <property name="font">,90,400,11,70,0</property>
         <property name="hidden">0</property>
         <property name="id">wxID_ANY</property>
         <property name="maximum_size">-1,30</property>
@@ -2136,8 +2136,8 @@
         <property name="name">m_statusBar</property>
         <property name="permission">protected</property>
         <property name="pos"></property>
-        <property name="size">-1,30</property>
-        <property name="style">wxSTB_SIZEGRIP</property>
+        <property name="size">-1,34</property>
+        <property name="style">wxSTB_DEFAULT_STYLE|wxSTB_SIZEGRIP</property>
         <property name="subclass">; ; forward_declare</property>
         <property name="tooltip"></property>
         <property name="window_extra_style"></property>

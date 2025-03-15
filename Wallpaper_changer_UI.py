@@ -33,14 +33,14 @@ class Main_Ui_Frame ( wx.Frame ):
 
         bSizer4 = wx.BoxSizer( wx.VERTICAL )
 
-        self.m_staticText_dirpath = wx.StaticText( self.m_panel1, wx.ID_ANY, _(u"选择壁纸目录:"), wx.DefaultPosition, wx.Size( 500,30 ), 0 )
+        self.m_staticText_dirpath = wx.StaticText( self.m_panel1, wx.ID_ANY, _(u"选择壁纸目录:"), wx.DefaultPosition, wx.Size( 500,34 ), 0 )
         self.m_staticText_dirpath.Wrap( -1 )
 
         self.m_staticText_dirpath.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
         bSizer4.Add( self.m_staticText_dirpath, 0, wx.ALL, 5 )
 
-        self.m_dirPicker = wx.DirPickerCtrl( self.m_panel1, wx.ID_ANY, wx.EmptyString, _(u"选择一个文件夹:"), wx.DefaultPosition, wx.Size( 480,30 ), wx.DIRP_DEFAULT_STYLE )
+        self.m_dirPicker = wx.DirPickerCtrl( self.m_panel1, wx.ID_ANY, wx.EmptyString, _(u"选择一个文件夹:"), wx.DefaultPosition, wx.Size( 480,38 ), wx.DIRP_DEFAULT_STYLE )
         bSizer4.Add( self.m_dirPicker, 0, wx.ALL, 5 )
 
 
@@ -95,7 +95,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_checkBox_startHideWin = wx.CheckBox( self.m_panel1, wx.ID_ANY, _(u"开机时隐藏窗口"), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
         bSizer61.Add( self.m_checkBox_startHideWin, 1, wx.ALL, 5 )
 
-        self.m_button_exit = wx.Button( self.m_panel1, wx.ID_ANY, _(u"退出程序"), wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_button_exit = wx.Button( self.m_panel1, wx.ID_ANY, _(u"退出程序"), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
         bSizer61.Add( self.m_button_exit, 2, wx.ALL, 5 )
 
 
@@ -105,7 +105,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_panel1.SetSizer( bSizer1 )
         self.m_panel1.Layout()
         bSizer1.Fit( self.m_panel1 )
-        self.m_notebook1.AddPage( self.m_panel1, _(u"壁纸切换"), True )
+        self.m_notebook1.AddPage( self.m_panel1, _(u"壁纸切换"), False )
         self.m_panel2 = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         bSizer8 = wx.BoxSizer( wx.VERTICAL )
 
@@ -192,7 +192,7 @@ class Main_Ui_Frame ( wx.Frame ):
         bSizer11.Add( self.m_staticText7, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
         m_choice_resolutionChoices = [ _(u"2K"), _(u"4K") ]
-        self.m_choice_resolution = wx.Choice( self.m_panel2, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,34 ), m_choice_resolutionChoices, 0 )
+        self.m_choice_resolution = wx.Choice( self.m_panel2, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,30 ), m_choice_resolutionChoices, 0 )
         self.m_choice_resolution.SetSelection( 0 )
         bSizer11.Add( self.m_choice_resolution, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
@@ -204,7 +204,7 @@ class Main_Ui_Frame ( wx.Frame ):
         bSizer11.Add( self.m_staticText8, 0, wx.ALL, 5 )
 
         m_choice_max_ThreadsChoices = [ _(u"2"), _(u"4"), _(u"6"), _(u"8"), _(u"10"), _(u"12"), wx.EmptyString ]
-        self.m_choice_max_Threads = wx.Choice( self.m_panel2, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,34 ), m_choice_max_ThreadsChoices, 0 )
+        self.m_choice_max_Threads = wx.Choice( self.m_panel2, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,30 ), m_choice_max_ThreadsChoices, 0 )
         self.m_choice_max_Threads.SetSelection( 1 )
         bSizer11.Add( self.m_choice_max_Threads, 0, wx.ALL, 5 )
 
@@ -229,15 +229,15 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_panel2.SetSizer( bSizer8 )
         self.m_panel2.Layout()
         bSizer8.Fit( self.m_panel2 )
-        self.m_notebook1.AddPage( self.m_panel2, _(u"壁纸下载"), False )
+        self.m_notebook1.AddPage( self.m_panel2, _(u"壁纸下载"), True )
 
         bSizer6.Add( self.m_notebook1, 1, wx.EXPAND |wx.ALL, 5 )
 
 
         self.SetSizer( bSizer6 )
         self.Layout()
-        self.m_statusBar = self.CreateStatusBar( 1, wx.STB_SIZEGRIP, wx.ID_ANY )
-        self.m_statusBar.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_statusBar = self.CreateStatusBar( 1, wx.STB_DEFAULT_STYLE|wx.STB_SIZEGRIP, wx.ID_ANY )
+        self.m_statusBar.SetFont( wx.Font( 11, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
         self.m_statusBar.SetMinSize( wx.Size( -1,30 ) )
         self.m_statusBar.SetMaxSize( wx.Size( -1,30 ) )
 

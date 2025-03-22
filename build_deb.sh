@@ -21,7 +21,7 @@ cp main_app.py                    ${FULL_PACKAGE_NAME}/usr/local/bin/wallpaper-c
 cp Wallpaper_changer_UI.py        ${FULL_PACKAGE_NAME}/usr/local/bin/Wallpaper_changer_UI.py
 cp ConfigMixin.py                 ${FULL_PACKAGE_NAME}/usr/local/bin/ConfigMixin.py
 cp WallpaperChangerTaskBarIcon.py ${FULL_PACKAGE_NAME}/usr/local/bin/WallpaperChangerTaskBarIcon.py
-cp my_logger.py                   ${FULL_PACKAGE_NAME}/usr/local/bin/my_logger.py
+cp app_logger.py                  ${FULL_PACKAGE_NAME}/usr/local/bin/app_logger.py
 cp WallpaperProcessor.py          ${FULL_PACKAGE_NAME}/usr/local/bin/WallpaperProcessor.py
 cp DownloadProcessor.py           ${FULL_PACKAGE_NAME}/usr/local/bin/DownloadProcessor.py
 cp YearMonthPicker.py             ${FULL_PACKAGE_NAME}/usr/local/bin/YearMonthPicker.py

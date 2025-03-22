@@ -123,13 +123,9 @@ class Main_Ui_Frame ( wx.Frame ):
         bSizer9.Add( self.m_comboBox_webSite, 1, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
         self.m_bpButton_add_Api = wx.BitmapButton( self.m_panel2, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.Size( 32,32 ), wx.BU_AUTODRAW|0 )
-
-        self.m_bpButton_add_Api.SetBitmap( wx.Bitmap( u"plus.png", wx.BITMAP_TYPE_ANY ) )
         bSizer9.Add( self.m_bpButton_add_Api, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
         self.m_bpButton_minus_Api = wx.BitmapButton( self.m_panel2, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.Size( 32,32 ), wx.BU_AUTODRAW|0 )
-
-        self.m_bpButton_minus_Api.SetBitmap( wx.Bitmap( u"minus.png", wx.BITMAP_TYPE_ANY ) )
         bSizer9.Add( self.m_bpButton_minus_Api, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
 

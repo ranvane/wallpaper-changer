@@ -25,7 +25,7 @@ class WallpaperChangerTaskBarIcon(TaskBarIcon):
         self.Bind(wx.adv.EVT_TASKBAR_LEFT_DOWN, self.on_left_down)
 
     def load_icon(self):
-        icon_path = os.path.join(RESOURCE_PATH, "icon.png")
+        icon_path = os.path.join(RESOURCE_PATH, 'resources',"icon.png")
 
         if not os.path.exists(icon_path):
             logging.error(f"图标文件不存在: {icon_path}")

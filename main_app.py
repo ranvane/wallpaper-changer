@@ -1,5 +1,6 @@
 import wx
 import os
+import sys
 from pathlib import Path
 
 from wx.adv import TaskBarIcon
@@ -17,6 +18,17 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
     def __init__(self):
         super().__init__(parent=None)
 
+        # 从 VERSION 文件读取版本号
+        version_file_path = os.path.join(RESOURCE_PATH,  'VERSION')
+        if os.path.exists(version_file_path):
+            with open(version_file_path, 'r') as f:
+                version = f.read().strip()
+        else:
+            version = ""
+
+        # 设置程序标题
+        self.SetTitle(f"壁纸更换器 - V{version}")
+
         self.running = False
         self.thread = None
         self.wallpapers = []
@@ -29,9 +41,13 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
                 '~/.config/wallpaper-changer/config.json')
             # logging.DEBUG(self.config_file)
 
-            # 修改图标路径
-            self.SetIcon(wx.Icon(os.path.join(RESOURCE_PATH, "icon.png")))
-            # self.SetIcon(wx.Icon("icon.png"), "壁纸更换器")
+            # 修复wxformbuilder设置的图标、图片路径在打包运行后找不到的问题
+            try:
+                self.SetIcon(wx.Icon(os.path.join(RESOURCE_PATH, 'resources', "icon.png")))
+                self.m_bpButton_add_Api.SetBitmap(wx.Bitmap(os.path.join(RESOURCE_PATH, 'resources', "plus.png")))
+                self.m_bpButton_minus_Api.SetBitmap(wx.Bitmap(os.path.join(RESOURCE_PATH, 'resources', "minus.png")))
+            except Exception as e:
+                logging.exception(f"加载应用图标时发生异常: {e}")
 
             # 修改模板文件路径
             self.template_file = os.path.join(
@@ -148,11 +164,10 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
 
 if __name__ == '__main__':
     app = wx.App()
-    # 设置应用程序名称和图标、取消，会影响托盘图标加载
-    # app.SetAppName("壁纸更换器")
-    # app.SetAppDisplayName("壁纸更换器")
+
 
     frame = Main_Frame()
 
     frame.Show()
+
     app.MainLoop()

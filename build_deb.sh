@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# 设置版本号变量
-VERSION="2.2.2"
+# 从 VERSION 文件读取版本号
+VERSION=$(cat VERSION)
 
 # 设置包名变量
 PACKAGE_NAME="wallpaper-changer"
@@ -25,7 +25,7 @@ cp app_logger.py                  ${FULL_PACKAGE_NAME}/usr/local/bin/app_logger.
 cp WallpaperProcessor.py          ${FULL_PACKAGE_NAME}/usr/local/bin/WallpaperProcessor.py
 cp DownloadProcessor.py           ${FULL_PACKAGE_NAME}/usr/local/bin/DownloadProcessor.py
 cp YearMonthPicker.py             ${FULL_PACKAGE_NAME}/usr/local/bin/YearMonthPicker.py
-cp icon.png                       ${FULL_PACKAGE_NAME}/usr/share/${PACKAGE_NAME}/
+cp VERSION                        ${FULL_PACKAGE_NAME}/usr/share/${PACKAGE_NAME}/VERSION
 cp -r resources                   ${FULL_PACKAGE_NAME}/usr/share/${PACKAGE_NAME}/
 
 # 创建 DEBIAN/control 文件

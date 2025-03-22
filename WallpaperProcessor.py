@@ -11,7 +11,7 @@ import sys
 from wx.adv import TaskBarIcon
 from Wallpaper_changer_UI import Main_Ui_Frame
 from WallpaperChangerTaskBarIcon import WallpaperChangerTaskBarIcon
-from my_logger import logging,RESOURCE_PATH,IS_PRODUCTION
+from app_logger import logging,RESOURCE_PATH,IS_PRODUCTION
 
 class WallpaperProcessor():
     def __init__(self, main_frame):

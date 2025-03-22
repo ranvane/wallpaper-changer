@@ -1,12 +1,11 @@
 import wx
 import os
-
 from pathlib import Path
 
 from wx.adv import TaskBarIcon
 from Wallpaper_changer_UI import Main_Ui_Frame
 from WallpaperChangerTaskBarIcon import WallpaperChangerTaskBarIcon
-from my_logger import logging, RESOURCE_PATH, IS_PRODUCTION
+from app_logger import logging, RESOURCE_PATH, IS_PRODUCTION
 from WallpaperProcessor import WallpaperProcessor
 from DownloadProcessor import DownloadProcessor
 from ConfigMixin import ConfigMixin
@@ -22,11 +21,13 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
         self.thread = None
         self.wallpapers = []
         self.current_index = -1
+        self.config_file = None
 
         try:
             # 修改配置文件路径
             self.config_file = os.path.expanduser(
                 '~/.config/wallpaper-changer/config.json')
+            # logging.DEBUG(self.config_file)
 
             # 修改图标路径
             self.SetIcon(wx.Icon(os.path.join(RESOURCE_PATH, "icon.png")))
@@ -41,11 +42,11 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
             self.autostart_dir = self.home_dir / '.config' / 'autostart'  # 设置自动启动目录路径
             self.desktop_file = self.autostart_dir / 'wallpaper_changer.desktop'  # 设置桌面文件路径
 
-            self.init_processors()  # 初始化处理器
-            self.bind_events()  # 绑定事件
-
             # 加载配置
             self.load_config()
+
+            self.init_processors()  # 初始化处理器
+            self.bind_events()  # 绑定事件
 
             # 检查是否设置了开机启动
             self.check_autostart()
@@ -92,6 +93,8 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
             wx.EVT_BUTTON, self.download_processor.on_start_Download)
         self.m_checkBox_use_Wallpapers_Folder.Bind(
             wx.EVT_CHECKBOX, self.download_processor.on_checkBox_use_Wallpapers_Folder)
+        self.m_bpButton_add_Api.Bind(wx.EVT_BUTTON, self.download_processor.on_bpButton_add_Api)
+        self.m_bpButton_minus_Api.Bind(wx.EVT_BUTTON, self.download_processor.on_bpButton_minus_Api)
 
     def check_autostart(self):
         '''检查是否设置了开机启动'''
@@ -150,5 +153,6 @@ if __name__ == '__main__':
     # app.SetAppDisplayName("壁纸更换器")
 
     frame = Main_Frame()
+
     frame.Show()
     app.MainLoop()

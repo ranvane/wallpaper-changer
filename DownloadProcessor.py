@@ -6,7 +6,7 @@ import os
 import wx
 from concurrent.futures import ThreadPoolExecutor
 import threading
-from my_logger import logging, RESOURCE_PATH, IS_PRODUCTION
+from app_logger import logging, RESOURCE_PATH, IS_PRODUCTION
 
 
 
@@ -14,6 +14,37 @@ class DownloadProcessor():
 
     def __init__(self, main_frame):
         self.main_frame = main_frame
+    def on_bpButton_add_Api(self, event):
+        """
+        添加API的方法。
+        此方法会获取用户输入的API地址，并将其添加到下拉框中。
+        如果用户输入的API地址为空，则会弹出一个警告对话框。
+        Args:
+            event: 触发此方法的事件对象
+        """
+        logging.info("添加bing site API")
+        value = self.main_frame.m_comboBox_webSite.GetValue().strip()
+        if value:
+            self.main_frame.m_comboBox_webSite.Append(value)
+            self.main_frame.m_comboBox_webSite.SetSelection(self.main_frame.m_comboBox_webSite.GetCount() - 1)
+
+    def on_bpButton_minus_Api(self, event):
+        """
+        减少API的方法。
+        此方法会从下拉框中删除当前选中的API地址。
+        Args:
+            event: 触发此方法的事件对象
+        """
+        logging.info("减少bing site API")
+        selected_index = self.main_frame.m_comboBox_webSite.GetSelection()
+        if selected_index != wx.NOT_FOUND:
+            self.main_frame.m_comboBox_webSite.Delete(selected_index)
+        if self.main_frame.m_comboBox_webSite.GetCount() > 0:
+            self.main_frame.m_comboBox_webSite.SetSelection(0)
+        else:
+            # 若为空，清空显示值
+            self.main_frame.m_comboBox_webSite.SetValue('')
+
 
     def on_select_Save_Folder(self, event):
         """

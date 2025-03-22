@@ -1,6 +1,6 @@
 import os
 import sys
-from my_logger import logging, RESOURCE_PATH, IS_PRODUCTION
+from app_logger import logging, RESOURCE_PATH, IS_PRODUCTION
 import json
 from pathlib import Path
 
@@ -21,39 +21,59 @@ class ConfigMixin:
         如果配置文件存在，它会加载目录路径和时间间隔设置。
         """
         logging.debug("Loading configuration...")
-
+        config = {
+            'bing-sites': ["https://bing.wdbyte.com/"],
+            'site-default': 0
+        }
         if os.path.exists(self.config_file):
             # 如果配置文件存在，则打开并读取内容
             with open(self.config_file, 'r') as f:
-                config = json.load(f)
-                # 设置目录选择器的路径
-                self.m_dirPicker.SetPath(config.get('directory', ''))
-                # 设置时间间隔控件的值
-                self.m_spinCtrl_interval.SetValue(config.get('interval', 60))
-                # 显示壁纸目录路径
-                self.m_staticText_dirpath.SetLabel(
-                    f"壁纸目录: {self.m_dirPicker.GetPath()}")
-                # 选择是否开机启动隐藏窗口
-                self.m_checkBox_startHideWin.SetValue(
-                    config.get('hidewindown', True))
-                # 选择是否使用壁纸文件夹
-                self.m_checkBox_use_Wallpapers_Folder.SetValue(
-                    config.get('use_wallpapers_folder', True))
-                
+                config.update(json.load(f))
+        # 尝试加载bing-sites值，如果bing-sites不存在或为空，则创建bing-sites
+        if 'bing-sites' not in config or not config['bing-sites']:
+            config['bing-sites'] = ["https://ranvane.github.io/Bing-Month-Wallpaper/"]
+            logging.info("未找到 'bing-sites' 或其值为空，已创建新的 'bing-sites' 项。")
+        # 尝试加载bing-site-default值，如果bing-site-default不存在，则创建bing-site-default
+        if 'site-default' not in config or config['site-default'] < 0:
+            config['site-default'] = 0
+            logging.info("设置 'site-default'=0")
+        # 设置目录选择器的路径
+        self.m_dirPicker.SetPath(config.get('directory', ''))
+        # 设置时间间隔控件的值
+        self.m_spinCtrl_interval.SetValue(config.get('interval', 60))
+        # 显示壁纸目录路径
+        self.m_staticText_dirpath.SetLabel(
+            f"壁纸目录: {self.m_dirPicker.GetPath()}")
+        # 选择是否开机启动隐藏窗口
+        self.m_checkBox_startHideWin.SetValue(
+            config.get('hidewindown', True))
+        # 选择是否使用壁纸文件夹
+        self.m_checkBox_use_Wallpapers_Folder.SetValue(
+            config.get('use_wallpapers_folder', True))
+        # 显示bing-sites值
+        self.m_comboBox_webSite.Clear()
+        for site in config['bing-sites']:
+            self.m_comboBox_webSite.Append(site)
+        if self.m_comboBox_webSite.GetCount() > 0 and config['site-default'] < self.m_comboBox_webSite.GetCount():
+            self.m_comboBox_webSite.SetSelection(config['site-default'])
+        else:
+            self.m_comboBox_webSite.SetSelection(0)
 
+        logging.debug(f"配置已加载: {config}")
 
-            logging.debug(f"配置已加载: {config}")
+        # 如果使用壁纸文件夹，则设置壁纸下载保存目录为壁纸文件夹
+        if self.m_checkBox_use_Wallpapers_Folder.GetValue():
+            self.m_textCtrl_save_folder.SetValue(
+                self.m_dirPicker.GetPath())
+        else:
+            self.m_textCtrl_save_folder.SetValue(
+                config.get('wallpapers_save_folder', ''))
 
-            # 如果使用壁纸文件夹，则设置壁纸下载保存目录为壁纸文件夹
-            if self.m_checkBox_use_Wallpapers_Folder.GetValue():
-                self.m_textCtrl_save_folder.SetValue(
-                    self.m_dirPicker.GetPath())
-            else:
-                self.m_textCtrl_save_folder.SetValue(
-                    config.get('wallpapers_save_folder', ''))
+        self.m_statusBar.SetLabel(f"配置已加载！")
 
-            self.m_statusBar.SetLabel(f"配置已加载！")
-            
+        # 将更新后的配置写回文件
+        with open(self.config_file, 'w') as f:
+            json.dump(config, f)
 
     def save_config(self):
         """
@@ -62,18 +82,26 @@ class ConfigMixin:
         此方法将当前的设置（包括壁纸目录和更换间隔）保存到配置文件中。
         """
         logging.debug("Save configuration...")
+        # 创建包含当前设置的配置字典
+        bing_sites = list(set(self.m_comboBox_webSite.GetItems()))
+        site_default = self.m_comboBox_webSite.GetSelection()
+        if site_default >= len(bing_sites):
+            site_default = 0
+            logging.info("'site-default' 值大于等于 'bing-sites' 的长度，已将其设置为 0。")
 
         # 创建包含当前设置的配置字典
         config = {
             'directory':
-            self.m_dirPicker.GetPath(),
+                self.m_dirPicker.GetPath(),
             'interval':
-            self.m_spinCtrl_interval.GetValue(),
+                self.m_spinCtrl_interval.GetValue(),
             'hidewindown':
-            self.m_checkBox_startHideWin.GetValue(),
+                self.m_checkBox_startHideWin.GetValue(),
             'use_wallpapers_folder':
-            self.m_checkBox_use_Wallpapers_Folder.GetValue(),
-            'wallpapers_save_folder':self.m_textCtrl_save_folder.GetValue()
+                self.m_checkBox_use_Wallpapers_Folder.GetValue(),
+            'wallpapers_save_folder': self.m_textCtrl_save_folder.GetValue(),
+            'bing-sites': bing_sites,
+            'site-default': site_default
         }
 
         # 确保配置目录存在

@@ -105,7 +105,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_panel1.SetSizer( bSizer1 )
         self.m_panel1.Layout()
         bSizer1.Fit( self.m_panel1 )
-        self.m_notebook1.AddPage( self.m_panel1, _(u"壁纸切换"), True )
+        self.m_notebook1.AddPage( self.m_panel1, _(u"壁纸切换"), False )
         self.m_panel2 = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         bSizer8 = wx.BoxSizer( wx.VERTICAL )
 
@@ -119,8 +119,18 @@ class Main_Ui_Frame ( wx.Frame ):
         bSizer9.Add( self.m_staticText4, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
         m_comboBox_webSiteChoices = []
-        self.m_comboBox_webSite = wx.ComboBox( self.m_panel2, wx.ID_ANY, _(u"bing.wdbyte.com"), wx.DefaultPosition, wx.Size( -1,34 ), m_comboBox_webSiteChoices, 0 )
+        self.m_comboBox_webSite = wx.ComboBox( self.m_panel2, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 32,32 ), m_comboBox_webSiteChoices, 0 )
         bSizer9.Add( self.m_comboBox_webSite, 1, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+        self.m_bpButton_add_Api = wx.BitmapButton( self.m_panel2, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.Size( 32,32 ), wx.BU_AUTODRAW|0 )
+
+        self.m_bpButton_add_Api.SetBitmap( wx.Bitmap( u"plus.png", wx.BITMAP_TYPE_ANY ) )
+        bSizer9.Add( self.m_bpButton_add_Api, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+        self.m_bpButton_minus_Api = wx.BitmapButton( self.m_panel2, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.Size( 32,32 ), wx.BU_AUTODRAW|0 )
+
+        self.m_bpButton_minus_Api.SetBitmap( wx.Bitmap( u"minus.png", wx.BITMAP_TYPE_ANY ) )
+        bSizer9.Add( self.m_bpButton_minus_Api, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
 
         bSizer8.Add( bSizer9, 1, wx.EXPAND, 5 )
@@ -222,6 +232,9 @@ class Main_Ui_Frame ( wx.Frame ):
 
         bSizer151.Add( self.m_button_start_Download, 0, wx.ALL, 5 )
 
+        self.m_button_exit1 = wx.Button( self.m_panel2, wx.ID_ANY, _(u"退出程序"), wx.DefaultPosition, wx.Size( -1,34 ), 0 )
+        bSizer151.Add( self.m_button_exit1, 1, wx.ALL, 5 )
+
 
         bSizer8.Add( bSizer151, 0, wx.EXPAND, 5 )
 
@@ -229,7 +242,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_panel2.SetSizer( bSizer8 )
         self.m_panel2.Layout()
         bSizer8.Fit( self.m_panel2 )
-        self.m_notebook1.AddPage( self.m_panel2, _(u"壁纸下载"), False )
+        self.m_notebook1.AddPage( self.m_panel2, _(u"壁纸下载"), True )
 
         bSizer6.Add( self.m_notebook1, 1, wx.EXPAND |wx.ALL, 5 )
 
@@ -253,9 +266,12 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_checkBox_autoStart.Bind( wx.EVT_CHECKBOX, self.on_auto_start_changed )
         self.m_checkBox_startHideWin.Bind( wx.EVT_CHECKBOX, self.on_startHideWin_changed )
         self.m_button_exit.Bind( wx.EVT_BUTTON, self.on_exit )
+        self.m_bpButton_add_Api.Bind( wx.EVT_BUTTON, self.on_bpButton_add_Api )
+        self.m_bpButton_minus_Api.Bind( wx.EVT_BUTTON, self.on_bpButton_minus_Api )
         self.m_button_select_Save_Folder.Bind( wx.EVT_BUTTON, self.on_select_Save_Folder )
         self.m_checkBox_use_Wallpapers_Folder.Bind( wx.EVT_CHECKBOX, self.on_checkBox_use_Wallpapers_Folder )
         self.m_button_start_Download.Bind( wx.EVT_BUTTON, self.on_start_Download )
+        self.m_button_exit1.Bind( wx.EVT_BUTTON, self.on_exit )
 
     def __del__( self ):
         pass
@@ -286,6 +302,12 @@ class Main_Ui_Frame ( wx.Frame ):
     def on_exit( self, event ):
         event.Skip()
 
+    def on_bpButton_add_Api( self, event ):
+        event.Skip()
+
+    def on_bpButton_minus_Api( self, event ):
+        event.Skip()
+
     def on_select_Save_Folder( self, event ):
         event.Skip()
 
@@ -294,5 +316,6 @@ class Main_Ui_Frame ( wx.Frame ):
 
     def on_start_Download( self, event ):
         event.Skip()
+
 
 

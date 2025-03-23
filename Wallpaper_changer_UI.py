@@ -105,7 +105,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_panel1.SetSizer( bSizer1 )
         self.m_panel1.Layout()
         bSizer1.Fit( self.m_panel1 )
-        self.m_notebook1.AddPage( self.m_panel1, _(u"壁纸切换"), False )
+        self.m_notebook1.AddPage( self.m_panel1, _(u"壁纸切换"), True )
         self.m_panel2 = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         bSizer8 = wx.BoxSizer( wx.VERTICAL )
 
@@ -312,6 +312,5 @@ class Main_Ui_Frame ( wx.Frame ):
 
     def on_start_Download( self, event ):
         event.Skip()
-
 
 

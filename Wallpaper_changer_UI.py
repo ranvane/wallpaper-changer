@@ -314,4 +314,3 @@ class Main_Ui_Frame ( wx.Frame ):
         event.Skip()
 
 
-

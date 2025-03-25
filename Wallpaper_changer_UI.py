@@ -238,7 +238,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_panel2.SetSizer( bSizer8 )
         self.m_panel2.Layout()
         bSizer8.Fit( self.m_panel2 )
-        self.m_notebook1.AddPage( self.m_panel2, _(u"壁纸下载"), True )
+        self.m_notebook1.AddPage( self.m_panel2, _(u"壁纸下载"), False )
 
         bSizer6.Add( self.m_notebook1, 1, wx.EXPAND |wx.ALL, 5 )
 
@@ -312,5 +312,6 @@ class Main_Ui_Frame ( wx.Frame ):
 
     def on_start_Download( self, event ):
         event.Skip()
+
 
 

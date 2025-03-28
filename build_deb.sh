@@ -35,7 +35,7 @@ Version: ${VERSION}
 Section: graphics
 Priority: optional
 Architecture: all
-Depends: python3 (>= 3.6), wxpython-tools,python3-requests,python3-lxml
+Depends: python3 (>= 3.6), python3-wxgtk4.0,python3-requests,python3-lxml
 Maintainer: ranvane <ranvane@gmail.com>
 Description: Wallpaper Changer
  A simple application to change wallpapers automatically

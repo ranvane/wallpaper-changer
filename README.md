@@ -17,7 +17,7 @@ Wallpaper Changer 是一个用于 Debian 系统的桌面壁纸自动更换工具
 2. 使用以下命令安装：
 
 ```bash
-sudo apt-get install python3-pip
+sudo apt-get install python3-pip libwxbase3.2-1t64 libwxgtk-gl3.2-1t64 libwxgtk3.2-1t64 python3-wxgtk4.0
 pip install wxPython requests lxml
 sudo dpkg -i wallpaper-changer.deb
 ```

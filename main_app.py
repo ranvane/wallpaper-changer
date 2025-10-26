@@ -2,7 +2,7 @@ import wx
 import os
 import sys
 from pathlib import Path
-
+import json
 from wx.adv import TaskBarIcon
 from Wallpaper_changer_UI import Main_Ui_Frame
 from WallpaperChangerTaskBarIcon import WallpaperChangerTaskBarIcon
@@ -39,7 +39,21 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
             # 修改配置文件路径
             self.config_file = os.path.expanduser(
                 '~/.config/wallpaper-changer/config.json')
-            # logging.DEBUG(self.config_file)
+            # 确保目录存在
+            os.makedirs(os.path.dirname(self.config_file ), exist_ok=True)
+
+            # 如果文件不存在，则创建一个默认配置文件
+            if not os.path.exists(self.config_file ):
+                default_config = {
+                    "wallpaper_dir": "~/Pictures/Wallpapers",
+                    "change_interval": 30,
+                    "last_wallpaper": None
+                }
+                with open(self.config_file, 'w', encoding='utf-8') as f:
+                    json.dump(default_config, f, indent=4, ensure_ascii=False)
+                print(f"已创建默认配置文件: {self.config_file}")
+            else:
+                print(f"配置文件已存在: {self.config_file}")
 
             # 修复wxformbuilder设置的图标、图片路径在打包运行后找不到的问题
             try:
@@ -61,8 +75,11 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
             # 加载配置
             self.load_config()
 
-            self.init_processors()  # 初始化处理器
-            self.bind_events()  # 绑定事件
+            # 初始化处理器实例
+            self.wallpaper_processor = WallpaperProcessor(self)
+            self.download_processor = DownloadProcessor(self)
+            # 绑定事件
+            self.bind_events()  
 
             # 检查是否设置了开机启动
             self.check_autostart()
@@ -77,11 +94,6 @@ class Main_Frame(Main_Ui_Frame, ConfigMixin):
 
         except Exception as e:
             logging.error(f"初始化时出错: {e}")
-
-    def init_processors(self):
-        # 初始化处理器实例
-        self.wallpaper_processor = WallpaperProcessor(self)
-        self.download_processor = DownloadProcessor(self)
 
     def bind_events(self):
         # 将 Main_Ui_Frame 中的事件绑定到处理器的方法

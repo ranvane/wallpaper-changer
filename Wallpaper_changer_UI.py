@@ -55,7 +55,7 @@ class Main_Ui_Frame ( wx.Frame ):
 
         bSizer3.Add( self.m_staticText3, 0, wx.ALL, 5 )
 
-        self.m_spinCtrl_interval = wx.SpinCtrl( self.m_panel1, wx.ID_ANY, u"30", wx.DefaultPosition, wx.Size( -1,30 ), wx.SP_ARROW_KEYS, 1, 1440, 60 )
+        self.m_spinCtrl_interval = wx.SpinCtrl( self.m_panel1, wx.ID_ANY, u"30", wx.DefaultPosition, wx.Size( -1,-1 ), wx.SP_ARROW_KEYS, 1, 1440, 60 )
         bSizer3.Add( self.m_spinCtrl_interval, 0, wx.ALL, 5 )
 
 
@@ -105,7 +105,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_panel1.SetSizer( bSizer1 )
         self.m_panel1.Layout()
         bSizer1.Fit( self.m_panel1 )
-        self.m_notebook1.AddPage( self.m_panel1, _(u"壁纸切换"), True )
+        self.m_notebook1.AddPage( self.m_panel1, _(u"壁纸切换"), False )
         self.m_panel2 = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         bSizer8 = wx.BoxSizer( wx.VERTICAL )
 
@@ -238,7 +238,7 @@ class Main_Ui_Frame ( wx.Frame ):
         self.m_panel2.SetSizer( bSizer8 )
         self.m_panel2.Layout()
         bSizer8.Fit( self.m_panel2 )
-        self.m_notebook1.AddPage( self.m_panel2, _(u"壁纸下载"), False )
+        self.m_notebook1.AddPage( self.m_panel2, _(u"壁纸下载"), True )
 
         bSizer6.Add( self.m_notebook1, 1, wx.EXPAND |wx.ALL, 5 )
 
